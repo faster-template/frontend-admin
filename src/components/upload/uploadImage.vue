@@ -4,6 +4,7 @@
       :action="props.action"
       :file-list="uploadFile ? [uploadFile] : []"
       :show-file-list="false"
+      accept=".jpg,.png"
       with-credentials
       :headers="headers"
       :data="props.data"
@@ -60,10 +61,9 @@
   const uploadFile = ref({ url: url.value } as FileItem);
   const headers = { Authorization: `Bearer ${getToken()}` };
   const onSuccess = (fileItem) => {
-    console.log(fileItem);
     if (fileItem.response && fileItem.response.success) {
       const fileUrl = fileItem.response.data;
-      Message.error('上传成功');
+      Message.success('上传成功');
       url.value = fileUrl;
       uploadFile.value.url = fileUrl;
       emits('success', fileUrl);

@@ -20,7 +20,7 @@
       <Menu v-if="topMenu" />
     </div>
     <ul class="right-side">
-      <li style="display: none;">
+      <li style="display: none">
         <a-tooltip :content="$t('settings.language')">
           <a-button class="nav-btn" type="outline" :shape="'circle'" @click="setDropDownVisible">
             <template #icon>
@@ -40,7 +40,7 @@
           </template>
         </a-dropdown>
       </li>
-      <li style="display: none;">
+      <li style="display: none">
         <a-tooltip
           :content="
             theme === 'light'
@@ -56,7 +56,7 @@
           </a-button>
         </a-tooltip>
       </li>
-      <li style="display: none;">
+      <li style="display: none">
         <a-tooltip :content="$t('settings.navbar.alerts')">
           <div class="message-box-trigger">
             <a-badge :count="9" dot>
