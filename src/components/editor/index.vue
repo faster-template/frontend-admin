@@ -21,13 +21,44 @@
   import { onBeforeUnmount, shallowRef } from 'vue';
   // eslint-disable-next-line import/no-unresolved
   import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
+  import { IEditorConfig } from '@wangeditor/editor';
+  import { uploadFile } from '@/api/upload';
 
+  type InsertImageFnType = (url: string, alt: string, href: string) => void;
+  type InsertVideoFnType = (url: string, poster: string) => void;
   // 内容 HTML
   const valueHtml = defineModel('content', { type: String, default: '' });
   // 编辑器实例，必须用 shallowRef
   const editorRef = shallowRef();
   const toolbarConfig = {};
-  const editorConfig = { placeholder: '请输入内容...' };
+  const editorConfig: Partial<IEditorConfig> = {
+    placeholder: '请输入内容...',
+    MENU_CONF: {
+      uploadImage: {
+        server: '/api/upload/file',
+        maxFileSize: 5 * 1024 * 1024,
+        maxNumberOfFiles: 9,
+        // 自定义上传
+        async customUpload(file: File, insertFn: InsertImageFnType) {
+          await uploadFile(file, { folderPath: 'editor/image' }).then(({ data }) => {
+            insertFn(data, file.name, '');
+          });
+        },
+      },
+      uploadVideo: {
+        server: '/api/upload/file',
+        maxFileSize: 5 * 1024 * 1024, // 5M // 单个文件的最大体积限制，默认为 10M
+        // 最多可上传几个文件，默认为 5
+        maxNumberOfFiles: 1,
+        // 自定义上传
+        async customUpload(file: File, insertFn: InsertVideoFnType) {
+          await uploadFile(file, { folderPath: 'editor/video' }).then(({ data }) => {
+            insertFn(data, '');
+          });
+        },
+      },
+    },
+  };
   const mode = 'default';
   // 组件销毁时，也及时销毁编辑器
   onBeforeUnmount(() => {

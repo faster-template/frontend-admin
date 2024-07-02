@@ -29,6 +29,7 @@
   },
   "include": [
     "config.d.ts",
+    "wang-editor.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",

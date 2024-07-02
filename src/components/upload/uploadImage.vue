@@ -60,6 +60,7 @@
   });
   const uploadFile = ref({ url: url.value } as FileItem);
   const headers = { Authorization: `Bearer ${getToken()}` };
+
   const onSuccess = (fileItem) => {
     if (fileItem.response && fileItem.response.success) {
       const fileUrl = fileItem.response.data;
@@ -71,12 +72,8 @@
       Message.error('上传失败，请重新上传');
     }
   };
-  const onError = (fileItem) => {
+  const onError = () => {
     Message.error('上传失败，请重新上传');
   };
 </script>
 
-<style lang="less" scoped>
-  .upload-image-comp-container {
-  }
-</style>
