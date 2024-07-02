@@ -1,0 +1,59 @@
+<template>
+  <a-select
+    v-model="selection"
+    :class="['draf-selector-comp-container', props.className]"
+    placeholder="选择草稿填充"
+    @change="
+      (item) => {
+        selectDraft(item);
+      }
+    "
+  >
+    <template #prefix>
+      <icon-refresh @click="load" />
+    </template>
+    <a-option
+      v-for="item in listData"
+      :key="item['id']"
+      :value="item['contentJson']"
+      :label="dayjs(item['createTime']).format('YYYY-MM-DD HH:mm:ss')"
+    ></a-option>
+  </a-select>
+</template>
+
+<script setup lang="ts">
+  import { getList } from '@/api/draf';
+  import { reactive, toRefs } from 'vue';
+  import * as dayjs from 'dayjs';
+  import { debounce } from 'lodash';
+
+  const props = defineProps({
+    resourceId: {
+      type: String,
+      default: null,
+    },
+    resourceType: {
+      type: String,
+      default: null,
+    },
+    className: {
+      type: String,
+      default: '',
+    },
+  });
+
+  const option = reactive({ listData: [], selection: null });
+  const { listData, selection } = toRefs(option);
+
+  const emits = defineEmits(['change']);
+
+  const selectDraft = (contentJson) => {
+    emits('change', JSON.parse(contentJson));
+  };
+  const load = debounce(() => {
+    getList({ resourceId: props.resourceId, resourceType: props.resourceType }).then(({ data }) => {
+      option.listData = data;
+    });
+  }, 500);
+  load();
+</script>
