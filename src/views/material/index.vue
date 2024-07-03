@@ -8,7 +8,7 @@
           allow-clear
           class="filter-item-input"
           placeholder="选择素材类型"
-          :options="materialType"
+          :options="MaterialType"
         >
         </a-select>
       </div>
@@ -23,6 +23,7 @@
           "
           >筛选</a-button
         >
+        <a-button type="primary" @click="onShowSelectionDialog">演示-打开选择器</a-button>
       </a-space>
     </a-space>
     <a-divider :margin="10"></a-divider>
@@ -74,6 +75,16 @@
       <a-empty v-if="!loading && option.list.length == 0" class="empty-container" />
     </a-spin>
     <a-image-preview v-model:visible="previewImage.visible" :src="previewImage.src" />
+
+    <materialSelector
+      v-model:visible="slectionDialogVisible"
+      type="image"
+      @ok="
+        (url) => {
+          Message.success(url);
+        }
+      "
+    ></materialSelector>
   </div>
 </template>
 
@@ -84,66 +95,31 @@
   import { onBeforeUnmount, onMounted, reactive, ref, toRefs } from 'vue';
   import useLoading from '@/hooks/loading';
   import { debounce } from 'lodash';
+  import materialSelector from '@/components/material/selectDialog.vue';
+  import { MaterialListItem, MaterialType } from '@/types/material';
 
-  interface ListItem {
-    id: string;
-    createTime: string;
-    updateTime: string;
-    state: 1;
-    creatorId: string;
-    type: 'image' | 'video' | 'audio' | 'file' | 'other';
-    ossType: 'qiniu' | 'other';
-    path: string;
-    mediaStatus: number;
-  }
+  const slectionDialogVisible = ref(false);
+  const onShowSelectionDialog = () => {
+    slectionDialogVisible.value = true;
+  };
+
   interface ColList {
     id: string;
-    list: ListItem[];
+    list: MaterialListItem[];
   }
-  const materialType = [
-    {
-      value: 'image',
-      label: '图片',
-    },
-    {
-      value: 'video',
-      label: '视频',
-    },
-    {
-      value: 'audio',
-      label: '音频',
-    },
-    {
-      value: 'file',
-      label: '文件',
-    },
-    {
-      value: 'other',
-      label: '其他',
-    },
-  ];
+
   const option = reactive({
     colList: [] as ColList[],
-    list: [] as ListItem[],
+    list: [] as MaterialListItem[],
     total: 0,
     gridCol: 0,
     gridSpan: 0,
   });
 
-  const filter = reactive({
-    type: 'image',
-    ossType: 'qiniu',
-  });
-  const pagination = reactive({
-    size: 10,
-    page: 1,
-    order: 'DESC',
-    orderBy: 'createTime',
-  });
   const { colList } = toRefs(option);
 
   const materialContainertRef = ref();
-  function appendColList(listData: ListItem[]) {
+  function appendColList(listData: MaterialListItem[]) {
     // 增加瀑布流追加偏移，防止每次加载数据都从第一列追加
     // 选择最少数据列开始追加
     const offset = option.colList.reduce(
@@ -157,7 +133,7 @@
       { index: 0, count: 100000 }
     );
     listData.forEach((item, index) => {
-      const colIndex = (index+offset.index) % option.gridCol;
+      const colIndex = (index + offset.index) % option.gridCol;
       option.colList[colIndex].list.push({ ...item, mediaStatus: 0 });
     });
   }
@@ -168,6 +144,16 @@
   }
 
   const { loading, setLoading } = useLoading();
+  const pagination = reactive({
+    size: 10,
+    page: 1,
+    order: 'DESC',
+    orderBy: 'createTime',
+  });
+  const filter = reactive({
+    type: 'image',
+    ossType: 'qiniu',
+  });
   function loadData() {
     setLoading(true);
     getList({ ...filter, ...pagination })
