@@ -18,9 +18,6 @@ export default {
   'menu.visualization': '数据可视化',
   'menu.user': '个人中心',
   'menu.arcoWebsite': 'Arco Design',
-  'menu.faq': '常见问题',
-  'navbar.docs': '文档中心',
-  'navbar.action.locale': '切换为中文',
   /** 新引入 */
   'menu.article': '文章',
   'menu.article.list': '文章列表',
@@ -30,6 +27,8 @@ export default {
   'menu.category.manage': '分类管理',
   'menu.setting': '设置',
   'menu.setting.userinfo': '用户信息',
+  'menu.material': '素材',
+  'menu.material.list': '素材管理',
   'state.disabled': '已禁用',
   'state.deleted': '已删除',
   'state.draft': '草稿',

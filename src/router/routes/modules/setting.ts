@@ -8,7 +8,7 @@ const SETTING: AppRouteRecordRaw = {
     locale: 'menu.setting',
     icon: 'icon-settings',
     requiresAuth: true,
-    order: 1,
+    order: 10,
   },
   component: DEFAULT_LAYOUT,
   children: [

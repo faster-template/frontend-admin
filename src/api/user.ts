@@ -15,10 +15,6 @@ export function login(data: LoginData) {
   return axios.post<LoginRes>('/admin-auth/login', data);
 }
 
-export function logout() {
-  return axios.post<LoginRes>('/user/logout');
-}
-
 export function getUserInfo() {
   return axios.post<UserState>('/user/info');
 }
