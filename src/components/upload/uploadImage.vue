@@ -35,6 +35,8 @@
         </div>
       </template>
     </a-upload>
+    <a-button v-if="url" type="text" @click="onPreview">预览</a-button>
+    <a-image-preview v-model:visible="visible" :src="url" />
   </div>
 </template>
 
@@ -75,5 +77,9 @@
   const onError = () => {
     Message.error('上传失败，请重新上传');
   };
-</script>
 
+  const visible = ref(false);
+  const onPreview = () => {
+    visible.value = !visible.value;
+  };
+</script>

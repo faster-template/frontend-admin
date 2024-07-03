@@ -11,6 +11,7 @@
       <a-form-item field="avatarUrl" label="头像" row-class="row">
         <UploadImage
           v-model:url="form.avatarUrl"
+          action="/api/upload/avatar"
           :data="{ folderPath: 'avatar', width: 100, height: 100 }"
           text="上传头像"
           @success="
