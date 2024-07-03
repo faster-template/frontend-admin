@@ -88,6 +88,10 @@
       </template>
       <template #operator="{ record }">
         <a-space>
+          <a-button size="mini" @click="onPreview(record.id)">
+            <template #icon> <icon-eye /> </template>预览</a-button
+          >
+
           <a-button size="mini" @click="router.push(`/article/edit/${record.id}`)">
             <template #icon> <icon-edit /> </template>编辑</a-button
           >
@@ -108,6 +112,11 @@
         </a-space>
       </template>
     </a-table>
+    <previewDialog
+      v-if="preivewOption.visible"
+      :id="preivewOption.id"
+      v-model:visible="preivewOption.visible"
+    ></previewDialog>
   </div>
 </template>
 
@@ -122,6 +131,7 @@
   import categorySelector from '@/components/category/selector.vue';
   import useLoading from '@/hooks/loading';
   import { debounce } from 'lodash-es';
+  import previewDialog from './components/previewDialog.vue';
 
   const router = useRouter();
   const option = reactive({
@@ -190,6 +200,14 @@
   };
   queryList();
 
+  const preivewOption = reactive({
+    id: '',
+    visible: false,
+  });
+  const onPreview = (id) => {
+    preivewOption.id = id;
+    preivewOption.visible = true;
+  };
   const createNew = () => {
     router.push('/article/create');
   };
