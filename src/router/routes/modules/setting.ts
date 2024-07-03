@@ -2,8 +2,9 @@ import { DEFAULT_LAYOUT } from '../base';
 import { AppRouteRecordRaw } from '../types';
 
 const SETTING: AppRouteRecordRaw = {
-  path: '',
+  path: '/setting',
   name: 'setting',
+  redirect: '/setting/userinfo',
   meta: {
     locale: 'menu.setting',
     icon: 'icon-settings',
@@ -13,7 +14,7 @@ const SETTING: AppRouteRecordRaw = {
   component: DEFAULT_LAYOUT,
   children: [
     {
-      path: '/setting/userinfo',
+      path: 'userinfo',
       name: 'user-info',
       meta: {
         locale: 'menu.setting.userinfo',

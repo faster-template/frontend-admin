@@ -2,18 +2,19 @@ import { DEFAULT_LAYOUT } from '../base';
 import { AppRouteRecordRaw } from '../types';
 
 const MATERIAL: AppRouteRecordRaw = {
-  path: '',
+  path: '/material',
   name: 'material',
+  redirect: '/material/list',
   meta: {
     locale: 'menu.material',
     icon: 'icon-archive',
     requiresAuth: true,
-    order: 1,
+    order: 3,
   },
   component: DEFAULT_LAYOUT,
   children: [
     {
-      path: '/material/list',
+      path: 'list',
       name: 'material-list',
       meta: {
         locale: 'menu.material.list',

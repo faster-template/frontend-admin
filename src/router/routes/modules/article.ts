@@ -2,18 +2,19 @@ import { DEFAULT_LAYOUT } from '../base';
 import { AppRouteRecordRaw } from '../types';
 
 const ARTICLE: AppRouteRecordRaw = {
-  path: '',
+  path: '/article',
   name: 'article',
+  redirect:'/article/list',
   meta: {
     locale: 'menu.article',
     icon: 'icon-book',
     requiresAuth: true,
-    order: 1,
+    order: 2,
   },
   component: DEFAULT_LAYOUT,
   children: [
     {
-      path: '/article/list',
+      path: 'list',
       name: 'article-list',
       meta: {
         locale: 'menu.article.list',
@@ -23,7 +24,7 @@ const ARTICLE: AppRouteRecordRaw = {
       component: () => import('@/views/article/list.vue'),
     },
     {
-      path: '/article/create',
+      path: 'create',
       name: 'article-create',
       meta: {
         locale: 'menu.article.create',
@@ -34,7 +35,7 @@ const ARTICLE: AppRouteRecordRaw = {
       component: () => import('@/views/article/createOrEdit.vue'),
     },
     {
-      path: '/article/edit/:id',
+      path: 'edit/:id',
       name: 'article-edit',
       meta: {
         locale: 'menu.article.edit',

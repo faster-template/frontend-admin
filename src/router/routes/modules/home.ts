@@ -2,26 +2,26 @@ import { DEFAULT_LAYOUT } from '../base';
 import { AppRouteRecordRaw } from '../types';
 
 const ARTICLE: AppRouteRecordRaw = {
-  path: '/category',
-  name: 'category',
-  redirect: '/category/list',
+  path: '/home',
+  name: 'HomePage',
+  redirect: '/home/index',
   meta: {
-    locale: 'menu.category',
-    icon: 'icon-mind-mapping',
+    locale: 'menu.homepage',
+    icon: 'icon-heart-fill',
     requiresAuth: true,
-    order: 4,
+    order: 1,
   },
   component: DEFAULT_LAYOUT,
   children: [
     {
-      path: 'list',
-      name: 'category-list',
+      path: 'index',
+      name: 'home-info',
       meta: {
-        locale: 'menu.category.manage',
+        locale: 'menu.homepage.index',
         requiresAuth: true,
         order: 1,
       },
-      component: () => import('@/views/category/index.vue'),
+      component: () => import('@/views/home/index.vue'),
     },
   ],
 };
