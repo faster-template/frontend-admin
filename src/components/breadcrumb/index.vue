@@ -3,7 +3,7 @@
     <a-breadcrumb-item>
       <icon-apps />
     </a-breadcrumb-item>
-    <a-breadcrumb-item v-for="item in breadcrumbs" :key="item" @click="router.push(item.path)">
+    <a-breadcrumb-item v-for="item in breadcrumbs" :key="item.path" @click="router.push(item.path)">
       {{ $t(item.text) }}
     </a-breadcrumb-item>
   </a-breadcrumb>

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import NProgress from 'nprogress'; // progress bar
+import * as NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css';
 
 import { appRoutes } from './routes';

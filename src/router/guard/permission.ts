@@ -2,14 +2,12 @@ import type { Router, RouteRecordNormalized } from 'vue-router';
 import * as NProgress from 'nprogress'; // progress bar
 
 import usePermission from '@/hooks/permission';
-import { useUserStore, useAppStore } from '@/store';
-import { appRoutes } from '../routes';
+import { useAppStore } from '@/store';
 import { WHITE_LIST, NOT_FOUND } from '../constants';
 
 export default function setupPermissionGuard(router: Router) {
-  router.beforeEach(async (to, from, next) => {
+  router.beforeEach(async (to, _from, next) => {
     const appStore = useAppStore();
-    const userStore = useUserStore();
     const Permission = usePermission();
     const permissionsAllow = Permission.accessRouter(to);
     if (appStore.menuFromServer) {
@@ -37,12 +35,7 @@ export default function setupPermissionGuard(router: Router) {
       } else next(NOT_FOUND);
     } else {
       // eslint-disable-next-line no-lonely-if
-      if (permissionsAllow) next();
-      else {
-        const destination =
-          Permission.findFirstPermissionRoute(appRoutes, userStore.role) || NOT_FOUND;
-        next(destination);
-      }
+      next();
     }
     NProgress.done();
   });

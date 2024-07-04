@@ -44,14 +44,14 @@
 
   function likeCreate(likeType: string) {
     // 点赞
-    likeAdd({ relationId, relationType, likeType: 'like' }).then(({ data }) => {
+    likeAdd({ relationId, relationType, likeType: 'like' }).then(() => {
       likeData.value.myLikeType = likeType;
       likeData.value[`${likeType}Count`] += 1;
     });
   }
   function likeDel(likeType: string) {
     // 点赞
-    likeDelete({ relationId, relationType }).then(({ data }) => {
+    likeDelete({ relationId, relationType }).then(() => {
       likeData.value.myLikeType = '';
       likeData.value[`${likeType}Count`] -= 1;
     });
@@ -81,8 +81,3 @@
     }
   }
 </script>
-
-<style lang="less" scoped>
-  .article-comp-like-container {
-  }
-</style>

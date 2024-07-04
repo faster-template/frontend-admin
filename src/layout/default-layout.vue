@@ -45,23 +45,19 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed, watch, provide, onMounted } from 'vue';
-  import { useRouter, useRoute } from 'vue-router';
-  import { useAppStore, useUserStore } from '@/store';
+  import { ref, computed, provide, onMounted } from 'vue';
+
+  import { useAppStore } from '@/store';
   import NavBar from '@/components/navbar/index.vue';
   import Menu from '@/components/menu/index.vue';
   import Footer from '@/components/footer/index.vue';
   import TabBar from '@/components/tab-bar/index.vue';
-  import usePermission from '@/hooks/permission';
   import useResponsive from '@/hooks/responsive';
   import PageLayout from './page-layout.vue';
 
   const isInit = ref(false);
   const appStore = useAppStore();
-  const userStore = useUserStore();
-  const router = useRouter();
-  const route = useRoute();
-  const permission = usePermission();
+
   useResponsive(true);
   const navbarHeight = `60px`;
   const navbar = computed(() => appStore.navbar);
@@ -84,12 +80,7 @@
     if (!isInit.value) return; // for page initialization menu state problem
     appStore.updateSettings({ menuCollapse: val });
   };
-  watch(
-    () => userStore.role,
-    (roleValue) => {
-      if (roleValue && !permission.accessRouter(route)) router.push({ name: 'notFound' });
-    }
-  );
+
   const drawerVisible = ref(false);
   const drawerCancel = () => {
     drawerVisible.value = false;

@@ -42,7 +42,7 @@
     },
   });
 
-  const option = reactive({ listData: [], selection: null });
+  const option = reactive({ listData: [], selection: undefined });
   const { listData, selection } = toRefs(option);
 
   const emits = defineEmits(['change']);
