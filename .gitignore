@@ -13,3 +13,5 @@ dist-ssr
 .env.local
 
 pnpm-lock.yaml
+deploy/restart.prod.sh
+deploy/webhook.prod.sh
