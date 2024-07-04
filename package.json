@@ -1,9 +1,9 @@
 {
-  "name": "arco-design-pro-vue",
-  "description": "Arco Design Pro for Vue",
+  "name": "faster-template-frontend-admin",
+  "description": "Power By Arco + Vue3",
   "version": "1.0.0",
   "private": true,
-  "author": "ArcoDesign Team",
+  "author": "heifengli001",
   "license": "MIT",
   "scripts": {
     "dev": "vite --config ./config/vite.config.dev.ts",
