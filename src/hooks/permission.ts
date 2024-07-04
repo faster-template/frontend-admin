@@ -1,9 +1,12 @@
 import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 
+import { useUserStore } from '@/store';
+
 export default function usePermission() {
+  const userStore = useUserStore();
   return {
     accessRouter(route: RouteLocationNormalized | RouteRecordRaw) {
-      return !route.meta?.requiresAuth;
+      return !route.meta?.requiresAuth || userStore.id;
     },
     findFirstPermissionRoute(_routers: any, role = 'admin') {
       const cloneRouters = [..._routers];
