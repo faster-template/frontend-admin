@@ -7,6 +7,11 @@
 该项目是后端[faster-template-backend-with-nestjs](https://github.com/heifengli001/faster-template-backend-with-nestjs)的前端实现，
 关于后端服务已有能力可前往查看已支持的功能
 
+### 后端实现能力
+<p align="center">
+<img src="./document/ztjg.jpg" /></p>
+
+
 ## 🎯 目标
  做一个开箱即用的快速开发模板。前端开发人员无需关注底层建设，只需要关心新增业务。
 
@@ -61,20 +66,85 @@ Todo:
 + 密码：Admin123
 
 ### 登录
-<div align="center">
-<img src="https://qiniu.ruashi.cn/Xnip2024-07-04_19-29-07.jpg" /></div>
+<p align="center">
+<img src="./document/loginpage.jpg" /></p>
 
 ### 内页
-<div align="center">
-<img src="https://qiniu.ruashi.cn/Xnip2024-07-04_19-34-44.jpg" />
-</div>
+<p align="center">
+<img src="./document/innerpage.jpg"  />
+</p>
 
 ---
 
+## 开发
+> 该前端基于 Vue3(vue-router+pinia) + Arco-Design开发。
+
++ [Vue3](https://cn.vuejs.org/api/)
++ [vue-router](https://router.vuejs.org/zh/)
++ [Pinia](https://pinia.vuejs.org/zh/getting-started.html)
++ [Arco](https://arco.design/vue/docs/pro/start)
+
+### 安装
++ https
+``` bash | zsh
+git clone  https://github.com/heifengli001/faster-template-frontend-admin-with-arco.git
+```
++ ssh
+``` bash | zsh
+git clone git@github.com:heifengli001/faster-template-frontend-admin-with-arco.git
+```
+
+### 运行
+> 包管理器`!!! 务必使用` `pnpm` 而不是 `npm`
+
+项目默认启动在`端口：4000`上
+```
+# 安装依赖
+pnpm install
+# 运行
+pnpm run dev
+```
+#
+
+### 运行后端服务
+详见：🚀后端服务项目 https://github.com/heifengli001/faster-template-backend-with-nestjs
+
 ## 部署
+
+前端的部署很简单，就两步
+1. 打包
+2. 静态托管
+
+### 打包 
+> 打包请确认安装`vue-tsc` ，config 文件已准备就绪
+
+```
+npm run build
+// 实际命令
+// vue-tsc --noEmit && vite build --config ./config/vite.config.prod.ts
+```
+### 静态托管
+如果你有自己的服务器，你可直接将打包后的文件上传到你服务器的目录，然后使用Nginx进行配置访问
+
+或者你可以使用其他免费的静态托管平台，如`netlify`和`vercel`
+
+如果你在你自己的服务器上进行静态托管，因为项目是`SPA+historyMode`请务必在`Nginx`设置`tryfiles`规则
+
+```
+    # SPA页面配置tryfiles
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+```
+### 附：如何使用webhook自动部署
 
 参考文章：[【NestJS应用从0到1】11.部署及git-hook自动部署](https://juejin.cn/post/7387291151735275529)
 
 上面文章是部署NestJS后端应用程序，前端和NestJS的流程类似，但最终打包前端只需要静态托管，无需启动服务
 
 如果你也刚好是使用webhook自动部署，在deploy文件夹下已经准备好了`webhook脚本`以及`服务重启`脚本
+
+/deploy 文件如下：
++ `prepare.sh` 如果你的开发机没有 `pnpm` 环境，可参考本脚本使用wget安装
++ `webhook.sh` webhook触发时执行的脚本;用于拉取仓库以及执行`restart.sh`
++ `restart.sh` 重启脚本；用于删除原目录，重新build新文件，build完成后删除源代码
