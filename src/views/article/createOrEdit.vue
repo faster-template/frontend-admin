@@ -3,17 +3,23 @@
     <a-spin :loading="pageLoad.loading.value">
       <a-form ref="formRef" :model="form" layout="vertical" :rules="rules" @submit="handleSubmit">
         <a-row :gutter="16">
-          <a-col :span="isEdit ? 8 : 12">
+          <a-col :span="isEdit ? 6 : 8">
             <a-form-item field="title" label="标题">
-              <a-input v-model="form.title" placeholder="请输入标题" />
+              <a-input
+                v-model="form.title"
+                placeholder="请输入标题"
+                max-length="30"
+                allow-clear
+                show-word-limit
+              />
             </a-form-item>
           </a-col>
-          <a-col :span="isEdit ? 8 : 12">
+          <a-col :span="isEdit ? 6 : 8">
             <a-form-item field="categoryId" label="分类">
               <categorySelector v-model="form.categoryId" parent-key="ARTICLE" />
             </a-form-item>
           </a-col>
-          <a-col v-if="isEdit" :span="8">
+          <a-col v-if="isEdit" :span="6">
             <a-form-item field="draft" label="草稿">
               <draftSelector
                 resource-type="article"
@@ -22,18 +28,20 @@
               ></draftSelector>
             </a-form-item>
           </a-col>
+
+          <a-col :span="6">
+            <a-form-item field="draft" label="操作">
+              <a-space>
+              <a-button :loading="loading" @click="saveDraft">存为草稿</a-button>
+              <a-button html-type="submit" type="primary" :loading="loading">保存并发布</a-button>
+            </a-space>
+          </a-form-item>
+          </a-col>
         </a-row>
         <a-form-item field="content" label="内容">
           <editor v-model:content="form.content"></editor>
-        </a-form-item>
-        <a-form-item content-class="form-btn">
-          <a-space>
-            <a-button :loading="loading" @click="saveDraft">存为草稿</a-button>
-            <a-button html-type="submit" type="primary" :loading="loading">保存并发布</a-button>
-          </a-space>
-        </a-form-item>
-      </a-form></a-spin
-    >
+        </a-form-item> </a-form
+    ></a-spin>
   </div>
 </template>
 
@@ -96,7 +104,7 @@
           if (data) {
             form.id = data.id;
             form.title = data.title;
-            form.categoryId = data.categoryId;
+            form.categoryId = data.category.id;
             form.content = data.content;
           } else {
             Message.error('文章不存在');
@@ -126,6 +134,8 @@
       if (!res) {
         setLoading(true);
         saveDraftDebounce();
+      } else {
+        Message.error('请检查表单内容是否正确');
       }
     });
   };
@@ -146,6 +156,8 @@
       if (!res) {
         setLoading(true);
         publishDebounce();
+      } else {
+        Message.error('请检查表单内容是否正确');
       }
     });
   };

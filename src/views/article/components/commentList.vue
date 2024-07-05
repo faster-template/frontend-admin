@@ -50,7 +50,7 @@
       margin-bottom: 10px;
     }
     .comment-wrapper {
-      height: 300px;
+      max-height: 300px;
       overflow-y: scroll;
     }
   }

@@ -16,7 +16,7 @@
       v-for="item in listData"
       :key="item['id']"
       :value="item['contentJson']"
-      :label="dayjs(item['createTime']).format('YYYY-MM-DD HH:mm:ss')"
+      :label="item['createTime']"
     ></a-option>
   </a-select>
 </template>
@@ -24,7 +24,6 @@
 <script setup lang="ts">
   import { getList } from '@/api/draf';
   import { reactive, toRefs } from 'vue';
-  import * as dayjs from 'dayjs';
   import { debounce } from 'lodash';
 
   const props = defineProps({

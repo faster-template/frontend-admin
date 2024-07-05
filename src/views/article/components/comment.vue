@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div class="article-comp-comment-container">
     <div class="comment-user-avatar">
@@ -6,9 +7,7 @@
     <div class="comment-info">
       <div class="comment-info-user"
         ><span class="comment-info-user-name">{{ props.data.creator?.nickName }}</span
-        ><span class="comment-info-user-time">{{
-          dayjs(props.data.createTime).format('YYYY-MM-DD HH:mm:ss')
-        }}</span>
+        ><span class="comment-info-user-time">{{ props.data.createTime }}</span>
       </div>
       <div class="comment-info-content"
         ><div v-html="DOMPurify.sanitize(props.data.content)"></div
@@ -23,8 +22,6 @@
 <script setup lang="ts">
   import { CommentDetail } from '@/types/comment';
   import DOMPurify from 'dompurify';
-
-  import * as dayjs from 'dayjs';
 
   const props = defineProps({
     data: {

@@ -1,16 +1,29 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
-  <a-modal v-model:visible="visible" class="article-comp-preview-dialog" width="620px" >
-    <template #title> {{ article.title }}</template>
-    <a-spin :loading="loading">
-      <div class="article-wrapper">
-        <div class="content" v-html="article.content"> </div>
-        <commentList :relation-id="props.id" relation-type="article"></commentList> </div
-    ></a-spin>
-  </a-modal>
+  <div class="article-comp-preview-dialog">
+    <a-modal
+      v-model:visible="visible"
+      :render-to-body="false"
+      width="620px"
+      body-class="article-preview-body"
+      ok-text="关闭"
+      hide-cancel
+    >
+      <template #title> {{ article.title }}</template>
+      <a-spin :loading="loading">
+        <div class="article-wrapper">
+          <div class="auther-info">
+            <span class="auther-info-name">{{ article.creator['nickName'] }}</span>
+            <span class="auther-info-updatetime">{{ article.updateTime }}</span>
+          </div>
+          <div class="content" v-html="article.content"> </div>
+          <commentList :relation-id="props.id" relation-type="article"></commentList> </div
+      ></a-spin> </a-modal
+  ></div>
 </template>
 
 <script setup lang="ts">
-  import { reactive } from 'vue';
+  import { ref } from 'vue';
   import { getDetail } from '@/api/article';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
@@ -27,10 +40,12 @@
   if (!props.id) {
     visible.value = false;
   }
-  const article = reactive({
+  const article = ref({
     title: '',
     content: '',
+    creator: {},
     comments: [],
+    updateTime: '',
   });
   const { loading, setLoading } = useLoading();
   function getArticle() {
@@ -38,8 +53,8 @@
     getDetail(props.id)
       .then(({ data }) => {
         if (data) {
-          article.title = data.title;
-          article.content = DOMPurify.sanitize(data.content);
+          article.value = data;
+          article.value.content = DOMPurify.sanitize(data.content);
         } else {
           Message.error('文章不存在');
           visible.value = false;
@@ -54,5 +69,26 @@
 
 <style lang="less" scoped>
   .article-comp-preview-dialog {
+    :deep(.arco-modal-header) {
+      min-height: 48px;
+      line-height: 24px;
+      height: auto;
+      padding: 12px;
+      text-align: center;
+    }
+    :deep(.article-preview-body) {
+      max-height: 500px;
+    }
+    .article-wrapper {
+      .auther-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        span {
+          font-size: 12px;
+          color: #666666;
+        }
+      }
+    }
   }
 </style>

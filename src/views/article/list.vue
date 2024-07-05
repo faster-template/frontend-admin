@@ -56,7 +56,7 @@
         {{ record.category && record.category.name }}
       </template>
       <template #createTime="{ record }">
-        {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+        {{ record.createTime }}
       </template>
       <template #creator="{ record }">
         {{ record.creator.nickName }}
@@ -76,7 +76,7 @@
             style="margin-left: 20px"
             size="mini"
             type="dashed"
-            :status="record.state == 0 ? 'normal' : 'success'"
+            :status="record.state == 0 ? 'success' : 'warning'"
           >
             <template #icon>
               <icon-check-circle v-if="record.state == 0" />
@@ -105,7 +105,7 @@
               }
             "
           >
-            <a-button size="mini" type="primary" status="danger">
+            <a-button size="mini" type="primary" status="danger" :disabled="record.state==1">
               <template #icon> <icon-delete /> </template>删除</a-button
             ></a-popconfirm
           >
@@ -123,7 +123,6 @@
 <script setup lang="ts">
   import { reactive, toRefs } from 'vue';
   import { useRouter } from 'vue-router';
-  import * as dayjs from 'dayjs';
   import { Message } from '@arco-design/web-vue';
 
   import { del, list, publish, unPublish } from '@/api/article';
@@ -152,26 +151,34 @@
     {
       title: '标题',
       dataIndex: 'title',
+      ellipsis: true,
+      tooltip: true,
+      width: 200,
     },
     {
       title: '分类',
       dataIndex: 'category',
       slotName: 'category',
+      width: 100,
     },
     {
       title: '更新时间',
       dataIndex: 'createTime',
       slotName: 'createTime',
+      ellipsis: true,
+      tooltip: true,
     },
     {
       title: '作者',
       dataIndex: 'creator',
       slotName: 'creator',
+      width: 100,
     },
     {
       title: '状态',
       dataIndex: 'state',
       slotName: 'state',
+      width: 160,
     },
     {
       title: '操作',

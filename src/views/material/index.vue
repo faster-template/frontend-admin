@@ -31,7 +31,7 @@
       <a-row class="material-list" :gutter="20">
         <a-col v-for="colItem in colList" :key="colItem.id" :span="option.gridSpan">
           <div v-for="item in colItem.list" :key="item.id" class="material-list-item">
-            <img v-if="item.type == 'image'" :src="item.path" />
+            <img v-if="item.type == 'image'" :src="item.path"  />
             <video
               v-else-if="item.type == 'video'"
               :ref="(el) => setRefMap(el, item)"
@@ -210,7 +210,9 @@
       refMap[`${item.id}`] = el;
     }
   };
-
+  function onImageError(event){
+    console.log(event)
+  }
   function onPreview(item) {
     switch (item.type) {
       case 'image':
