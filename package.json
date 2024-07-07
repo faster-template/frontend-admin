@@ -62,8 +62,10 @@
     "@vitejs/plugin-vue": "^3.2.0",
     "@vitejs/plugin-vue-jsx": "^2.1.1",
     "@vue/babel-plugin-jsx": "^1.2.2",
+    "commitizen": "^4.3.0",
     "consola": "^2.15.3",
     "cross-env": "^7.0.3",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.10.0",
@@ -103,5 +105,10 @@
     "bin-wrapper": "npm:bin-wrapper-china",
     "rollup": "^2.56.3",
     "gifsicle": "5.2.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
