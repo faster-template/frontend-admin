@@ -1,4 +1,4 @@
-export  const MaterialType = [
+export const MaterialType = [
   {
     value: 'image',
     label: '图片',

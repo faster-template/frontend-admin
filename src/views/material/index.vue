@@ -90,11 +90,10 @@
 
 <script setup lang="ts">
   import { getList } from '@/api/material';
-  import { clipboard } from '@/utils';
   import { Message } from '@arco-design/web-vue';
   import { onBeforeUnmount, onMounted, reactive, ref, toRefs } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { debounce } from 'lodash';
+  import { debounce, copy2clipboard } from '@/utils';
   import materialSelector from '@/components/material/selectDialog.vue';
   import { MaterialListItem, MaterialType } from '@/types/material';
 
@@ -234,7 +233,7 @@
     item.mediaStatus = 0;
   }
   function onCopy(item) {
-    clipboard(item.path);
+    copy2clipboard(item.path);
   }
 </script>
 

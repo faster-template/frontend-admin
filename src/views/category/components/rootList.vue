@@ -29,7 +29,7 @@
           >
           <a-space class="drag-list-item-btns">
             <a-tooltip content="复制Key值" position="top" mini>
-              <icon-copy @click="clipboard(item.key)"
+              <icon-copy @click="copy2clipboard(item.key)"
             /></a-tooltip>
             <icon-edit @click="handlerEdit(item)" />
             <a-popconfirm
@@ -59,9 +59,8 @@
   import { reactive, toRefs } from 'vue';
   import { VueDraggable } from 'vue-draggable-plus';
   import useLoading from '@/hooks/loading';
-  import { debounce } from 'lodash-es';
   import { getRootList, del, sort } from '@/api/category';
-  import { clipboard } from '@/utils';
+  import { copy2clipboard, debounce } from '@/utils';
   import { ICategory } from '../types';
   import modifyDialog from './createOrEditDialog.vue';
 

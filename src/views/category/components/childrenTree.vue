@@ -46,7 +46,7 @@
         <template #extra="nodeData">
           <a-space class="tree-item-btns">
             <a-tooltip content="复制Key值" position="top" mini>
-              <icon-copy @click="clipboard(formatNodeKey(nodeData.key).key)"
+              <icon-copy @click="copy2clipboard(formatNodeKey(nodeData.key).key)"
             /></a-tooltip>
             <icon-edit @click="onEdit(formatNodeKey(nodeData.key).id)" />
             <a-popconfirm
@@ -82,10 +82,10 @@
 <script setup lang="ts">
   import { watch, reactive, ref, nextTick, toRefs } from 'vue';
   import { Message, TreeNodeData } from '@arco-design/web-vue';
-  import { debounce } from 'lodash-es';
+
   import useLoading from '@/hooks/loading';
   import { getChildren, del, sort } from '@/api/category';
-  import { clipboard } from '@/utils';
+  import { copy2clipboard, debounce } from '@/utils';
   import { ICategory } from '../types';
   import modifyDialog from './createOrEditDialog.vue';
 

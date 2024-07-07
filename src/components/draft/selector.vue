@@ -24,7 +24,7 @@
 <script setup lang="ts">
   import { getList } from '@/api/draf';
   import { reactive, toRefs } from 'vue';
-  import { debounce } from 'lodash';
+  import { debounce } from '@/utils';
 
   const props = defineProps({
     resourceId: {

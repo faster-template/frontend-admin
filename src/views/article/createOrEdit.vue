@@ -48,7 +48,7 @@
 <script setup lang="ts">
   import { computed, reactive, ref } from 'vue';
   import { Message } from '@arco-design/web-vue';
-  import { debounce } from 'lodash-es';
+  import { debounce } from '@/utils';
   import { useRoute, useRouter } from 'vue-router';
 
   import categorySelector from '@/components/category/selector.vue';

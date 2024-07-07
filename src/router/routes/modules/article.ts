@@ -4,7 +4,7 @@ import { AppRouteRecordRaw } from '../types';
 const ARTICLE: AppRouteRecordRaw = {
   path: '/article',
   name: 'article',
-  redirect:'/article/list',
+  redirect: '/article/list',
   meta: {
     locale: 'menu.article',
     icon: 'icon-book',

@@ -105,7 +105,7 @@
               }
             "
           >
-            <a-button size="mini" type="primary" status="danger" :disabled="record.state==1">
+            <a-button size="mini" type="primary" status="danger" :disabled="record.state === 1">
               <template #icon> <icon-delete /> </template>删除</a-button
             ></a-popconfirm
           >
@@ -129,7 +129,7 @@
   import { state } from '@/consts';
   import categorySelector from '@/components/category/selector.vue';
   import useLoading from '@/hooks/loading';
-  import { debounce } from 'lodash-es';
+  import { debounce } from '@/utils';
   import previewDialog from './components/previewDialog.vue';
 
   const router = useRouter();

@@ -1,7 +1,4 @@
-
 import localeLogin from '@/views/login/locale/zh-CN';
-
-
 import localeSettings from './zh-CN/settings';
 
 export default {

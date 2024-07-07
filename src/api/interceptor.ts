@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Message, Modal } from '@arco-design/web-vue';
-import { getCSRF, getToken } from '@/utils/auth';
+import { getCSRF, getToken } from '@/utils';
 
 export interface HttpResponse<T = unknown> {
   status: number;
@@ -29,9 +29,8 @@ axios.interceptors.request.use(
       }
       config.headers.Authorization = `Bearer ${token}`;
       config.headers['x-csrf-token'] = csrf as string;
-
     }
-    config.withCredentials = true
+    config.withCredentials = true;
     return config;
   },
   (error) => {

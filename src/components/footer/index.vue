@@ -1,5 +1,8 @@
 <template>
-  <a-layout-footer class="footer">Frontend PowerBy [Arco.Pro] & Backend PowerBy [faster-template-backend-with-nestjs]</a-layout-footer>
+  <a-layout-footer class="footer"
+    >Frontend PowerBy [Arco.Pro] & Backend PowerBy
+    [faster-template-backend-with-nestjs]</a-layout-footer
+  >
 </template>
 
 <script lang="ts" setup></script>

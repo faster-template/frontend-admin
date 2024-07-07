@@ -84,7 +84,7 @@
         match: /^[A-Z]+$/,
         message: '标识只能包含大写字母',
       },
-    ]
+    ],
   };
   const isEdit = computed(() => {
     return categoryModel.value && categoryModel.value.id;

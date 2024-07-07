@@ -83,7 +83,7 @@
   import { useUserStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import { modifyNickName, modifyPwd, modifyUserName, modifyAvatar } from '@/api/user';
-  import { debounce } from 'lodash';
+  import { debounce } from '@/utils';
   import { RegNickName, RegPassword, RegUserName } from '@/consts';
   import UploadImage from '@/components/upload/uploadImage.vue';
 
