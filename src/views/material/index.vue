@@ -31,7 +31,15 @@
       <a-row class="material-list" :gutter="20">
         <a-col v-for="colItem in colList" :key="colItem.id" :span="option.gridSpan">
           <div v-for="item in colItem.list" :key="item.id" class="material-list-item">
-            <img v-if="item.type == 'image'" :src="item.path" @error="onImageError" />
+            <img
+              v-if="item.type == 'image'"
+              :src="item.path"
+              @error="
+                (e) => {
+                  onImageError(e, item);
+                }
+              "
+            />
             <video
               v-else-if="item.type == 'video'"
               :ref="(el) => setRefMap(el, item)"
@@ -54,7 +62,7 @@
               <icon-file-audio v-if="item.type == 'audio'" />
               <icon-drive-file v-if="item.type == 'file'" />
             </div>
-            <div class="operator">
+            <div v-if="item.path" class="operator">
               <a-tooltip v-if="['image'].includes(item.type)" content="预览">
                 <icon-eye @click="onPreview(item)"
               /></a-tooltip>
@@ -69,6 +77,7 @@
                 <icon-copy @click="onCopy(item)" />
               </a-tooltip>
             </div>
+            <div v-else class="error-message"> 图片加载失败 </div>
           </div>
         </a-col>
       </a-row>
@@ -209,8 +218,10 @@
       refMap[`${item.id}`] = el;
     }
   };
-  function onImageError(event) {
+  function onImageError(event, item) {
     if (event && event.target) event.target.src = 'https://qiniu.ruashi.cn/image-error.png';
+
+    item.path = '';
   }
   function onPreview(item) {
     switch (item.type) {
@@ -303,7 +314,8 @@
           z-index: 10;
           border-radius: 0 8px 8px 0;
         }
-        .operator {
+        .operator,
+        .error-message {
           position: absolute;
           bottom: 0;
           left: 0;

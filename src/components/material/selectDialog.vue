@@ -37,10 +37,18 @@
         <div
           v-for="item in list"
           :key="item.id"
-          :class="['material-list-item', item.id == option.selection?.id ? 'is-active' : '']"
+          :class="['material-list-item', item.path == option.selection?.path ? 'is-active' : '']"
           @click="onSelect(item)"
         >
-          <img v-if="item.type == 'image'" :src="item.path" />
+          <img
+            v-if="item.type == 'image'"
+            :src="item.path"
+            @error="
+              (e) => {
+                onImageError(e, item);
+              }
+            "
+          />
           <video v-else-if="item.type == 'video'" :src="item.path"></video>
           <audio v-else-if="item.type == 'audio'" :src="item.path"></audio>
           <div v-else class="item-file">
@@ -55,8 +63,10 @@
             <icon-file-audio v-if="item.type == 'audio'" style="color: rgb(var(--orange-6))" />
             <icon-drive-file v-if="item.type == 'file'" style="color: rgb(var(--red-5))" />
           </div>
-        </div> </div
-    ></a-spin>
+          <div v-if="!item.path" class="error-message"> 图片加载失败 </div>
+        </div>
+      </div></a-spin
+    >
   </a-modal>
 </template>
 
@@ -81,11 +91,17 @@
     total: 0,
     selection: {} as MaterialListItem,
   });
+  function onImageError(event, item) {
+    if (event && event.target) event.target.src = 'https://qiniu.ruashi.cn/image-error.png';
+
+    item.path = '';
+  }
+
   function onSelect(item) {
-    option.selection = item;
+    if (item.path) option.selection = item;
   }
   function onOk() {
-    if (option.selection?.id) {
+    if (option.selection?.path) {
       emits('ok', option.selection?.path);
     }
   }
@@ -179,6 +195,20 @@
         color: rgb(var(--blue-5));
         z-index: 10;
         border-radius: 0 8px 8px 0;
+      }
+      .error-message {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        background-color: rgba(0, 0, 0, 0.5);
+        width: 100%;
+        color: #ffffff;
+        height: 24px;
+        line-height: 24px;
+        font-size: 12px;
+        align-items: center;
+        justify-content: space-evenly;
       }
     }
   }
