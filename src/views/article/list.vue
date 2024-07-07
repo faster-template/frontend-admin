@@ -129,7 +129,7 @@
   import { state } from '@/consts';
   import categorySelector from '@/components/category/selector.vue';
   import useLoading from '@/hooks/loading';
-  import { debounce } from '@/utils';
+  import debounce from 'lodash/debounce';
   import previewDialog from './components/previewDialog.vue';
 
   const router = useRouter();
@@ -245,7 +245,7 @@
   .article-list-container {
     margin: 0 20px;
     padding: 10px;
-    background-color: #ffffff;
+    background-color: #fff;
 
     .header-filter {
       display: flex;
@@ -256,9 +256,9 @@
 
         &-label {
           width: 60px;
-          text-align: right;
           padding-right: 20px;
-          color: #666666;
+          color: #666;
+          text-align: right;
         }
 
         &-input,

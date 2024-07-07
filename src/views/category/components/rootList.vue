@@ -60,7 +60,8 @@
   import { VueDraggable } from 'vue-draggable-plus';
   import useLoading from '@/hooks/loading';
   import { getRootList, del, sort } from '@/api/category';
-  import { copy2clipboard, debounce } from '@/utils';
+  import { copy2clipboard } from '@/utils';
+  import debounce from 'lodash/debounce';
   import { ICategory } from '../types';
   import modifyDialog from './createOrEditDialog.vue';
 
@@ -141,63 +142,72 @@
 
 <style lang="less" scoped>
   .category-comp-root-list-container {
-    background-color: #ffffff;
     min-height: 500px;
+    background-color: #fff;
+
     .header-tools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 12px 20px;
       color: var(--color-text-1);
       font-weight: 500;
       font-size: 16px;
       line-height: 1.5;
       border-bottom: 1px solid var(--color-neutral-3);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
+
     .drag-list {
       &-item {
-        padding: 8px 20px 8px 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 20px 8px 10px;
+
         .drag-handle {
-          cursor: move;
           flex: 0;
-          color: #999999;
+          color: #999;
+          cursor: move;
         }
+
         &-label {
           flex: 1;
           margin-left: 10px;
           font-size: 14px;
+
           &-name {
-            color: #333333;
+            color: #333;
             line-height: 20px;
           }
+
           &-key {
+            color: #666;
             font-size: 12px;
             line-height: 24px;
-            color: #666666;
           }
         }
+
         &-btns {
+          display: flex;
           flex: 0;
           width: 50px;
-          display: flex;
         }
+
         &::after {
-          content: '';
-          display: block;
-          clear: both;
-          height: 1px;
-          width: 100%;
-          background-color: var(--color-neutral-3);
           position: absolute;
           bottom: 0;
           left: 0;
+          display: block;
+          clear: both;
+          width: 100%;
+          height: 1px;
+          background-color: var(--color-neutral-3);
           transform: scaleY(0.5);
+          content: '';
         }
       }
+
       &-item.is-active {
         background-color: #efefef;
       }

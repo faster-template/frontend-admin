@@ -32,10 +32,10 @@
           <a-col :span="6">
             <a-form-item field="draft" label="操作">
               <a-space>
-              <a-button :loading="loading" @click="saveDraft">存为草稿</a-button>
-              <a-button html-type="submit" type="primary" :loading="loading">保存并发布</a-button>
-            </a-space>
-          </a-form-item>
+                <a-button :loading="loading" @click="saveDraft">存为草稿</a-button>
+                <a-button html-type="submit" type="primary" :loading="loading">保存并发布</a-button>
+              </a-space>
+            </a-form-item>
           </a-col>
         </a-row>
         <a-form-item field="content" label="内容">
@@ -48,7 +48,7 @@
 <script setup lang="ts">
   import { computed, reactive, ref } from 'vue';
   import { Message } from '@arco-design/web-vue';
-  import { debounce } from '@/utils';
+  import debounce from 'lodash/debounce';
   import { useRoute, useRouter } from 'vue-router';
 
   import categorySelector from '@/components/category/selector.vue';
@@ -170,9 +170,10 @@
 
 <style lang="less" scoped>
   .article-modify-container {
-    background-color: #ffffff;
     margin: 0 20px;
     padding: 20px;
+    background-color: #fff;
+
     :deep(.form-btn) {
       justify-content: flex-end;
     }

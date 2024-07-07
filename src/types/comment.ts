@@ -2,7 +2,7 @@ import { UserInfo } from './user';
 
 export interface CommentQueryParams {
   relationId: string;
-  relationType: 'article';
+  relationType: string | 'article';
 }
 
 export interface CommentCreateBody extends CommentQueryParams {

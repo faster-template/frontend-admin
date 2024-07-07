@@ -85,7 +85,8 @@
 
   import useLoading from '@/hooks/loading';
   import { getChildren, del, sort } from '@/api/category';
-  import { copy2clipboard, debounce } from '@/utils';
+  import { copy2clipboard } from '@/utils';
+  import debounce from 'lodash/debounce';
   import { ICategory } from '../types';
   import modifyDialog from './createOrEditDialog.vue';
 
@@ -216,41 +217,48 @@
 
 <style lang="less" scoped>
   .category-comp-children-tree-container {
-    background-color: #ffffff;
     min-height: 500px;
+    background-color: #fff;
+
     .header-tools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 12px 20px;
       color: var(--color-text-1);
       font-weight: 500;
       font-size: 16px;
       line-height: 1.5;
       border-bottom: 1px solid var(--color-neutral-3);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
+
     :deep(.arco-tree) {
       padding: 0 10px;
+
       .arco-tree-node-title-text {
-        align-items: center;
         display: flex;
-        width: 100%;
+        align-items: center;
         justify-content: space-between;
+        width: 100%;
+
         .text-title {
-          color: #333333;
-          line-height: 20px;
+          color: #333;
           font-size: 14px;
+          line-height: 20px;
         }
+
         .text-key {
+          color: #666;
           font-size: 12px;
           line-height: 24px;
-          color: #666666;
         }
+
         .arco-tree-node-drag-icon {
           position: relative;
           margin-left: 10px;
         }
       }
+
       .tree-item-btns {
         margin-left: 20px;
       }

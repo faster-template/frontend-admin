@@ -1,5 +1,3 @@
-export { default as debounce } from './debounce';
-export { default as throttle } from './throttle';
 export { default as copy2clipboard } from './copy2clipboard';
 export * from './storage';
 export * from './is';

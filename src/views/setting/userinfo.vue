@@ -83,7 +83,7 @@
   import { useUserStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import { modifyNickName, modifyPwd, modifyUserName, modifyAvatar } from '@/api/user';
-  import { debounce } from '@/utils';
+  import debounce from 'lodash/debounce';
   import { RegNickName, RegPassword, RegUserName } from '@/consts';
   import UploadImage from '@/components/upload/uploadImage.vue';
 
@@ -182,18 +182,18 @@
 
 <style lang="less" scoped>
   .setting-userinfo-container {
-    margin: 0 20px;
     min-height: 500px;
-    .user-info-form {
-    }
+    margin: 0 20px;
+
     .row {
-      background-color: #ffffff;
       display: flex;
       align-items: center;
       width: 100%;
       margin-bottom: 20px;
       padding: 30px 20px;
+      background-color: #fff;
       border-radius: 8px;
+
       :deep(.arco-input-wrapper) {
         width: 320px;
       }

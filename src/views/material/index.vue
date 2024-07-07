@@ -102,7 +102,8 @@
   import { Message } from '@arco-design/web-vue';
   import { onBeforeUnmount, onMounted, reactive, ref, toRefs } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { debounce, copy2clipboard } from '@/utils';
+  import { copy2clipboard } from '@/utils';
+  import debounce from 'lodash/debounce';
   import materialSelector from '@/components/material/selectDialog.vue';
   import { MaterialListItem, MaterialType } from '@/types/material';
 
@@ -250,23 +251,25 @@
 
 <style lang="less" scoped>
   .material-container {
+    box-sizing: border-box;
+    width: calc(100% - 40px);
     margin: 0 20px;
     padding: 10px;
-    background-color: #ffffff;
-    width: calc(100% - 40px);
     overflow: hidden;
-    box-sizing: border-box;
+    background-color: #fff;
+
     .header-filter {
       display: flex;
+
       .filter-item {
         display: flex;
         align-items: center;
 
         &-label {
-          padding-left: 12px;
-          text-align: right;
           padding-right: 20px;
-          color: #666666;
+          padding-left: 12px;
+          color: #666;
+          text-align: right;
         }
 
         &-input,
@@ -275,61 +278,68 @@
         }
       }
     }
+
     .material-wrapper {
       height: calc(100vh - 160px);
-      overflow-x: hidden;
-      overflow-y: scroll;
+      overflow: hidden scroll;
     }
+
     .material-list {
       margin-top: 12px;
+
       &-item {
         position: relative;
-        overflow: hidden;
         margin-bottom: 20px;
+        overflow: hidden;
+
         img,
         video {
+          display: block;
           width: 100%;
           height: auto;
-          display: block;
         }
+
         .item-file {
           height: 120px;
-          text-align: center;
-          color: #666666;
-          line-height: 18px;
-          font-size: 12px;
           padding: 10px 0;
-          border: 1px solid #cccccc;
+          color: #666;
+          font-size: 12px;
+          line-height: 18px;
+          text-align: center;
+          border: 1px solid #ccc;
         }
+
         .icon {
           position: absolute;
           bottom: 0;
           left: 0;
-          height: 24px;
-          line-height: 24px;
-          padding: 0 4px 0 4px;
-          font-size: 16px;
-          background-color: rgba(0, 0, 0, 0.5);
-          color: rgb(var(--blue-5));
           z-index: 10;
+          height: 24px;
+          padding: 0 4px;
+          color: rgb(var(--blue-5));
+          font-size: 16px;
+          line-height: 24px;
+          background-color: rgb(0 0 0 / 50%);
           border-radius: 0 8px 8px 0;
         }
+
         .operator,
         .error-message {
           position: absolute;
           bottom: 0;
           left: 0;
           display: flex;
-          background-color: rgba(0, 0, 0, 0.5);
-          width: 100%;
-          color: #ffffff;
-          height: 24px;
-          line-height: 24px;
           align-items: center;
           justify-content: space-evenly;
+          width: 100%;
+          height: 24px;
+          color: #fff;
+          line-height: 24px;
+          background-color: rgb(0 0 0 / 50%);
         }
       }
     }
+
     .empty-container {
       padding: 60px;
     }

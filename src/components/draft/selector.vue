@@ -24,7 +24,7 @@
 <script setup lang="ts">
   import { getList } from '@/api/draf';
   import { reactive, toRefs } from 'vue';
-  import { debounce } from '@/utils';
+  import { useDebounceFn } from '@vueuse/core';
 
   const props = defineProps({
     resourceId: {
@@ -49,7 +49,7 @@
   const selectDraft = (contentJson) => {
     emits('change', JSON.parse(contentJson));
   };
-  const load = debounce(() => {
+  const load = useDebounceFn(() => {
     getList({ resourceId: props.resourceId, resourceType: props.resourceType }).then(({ data }) => {
       option.listData = data;
     });
