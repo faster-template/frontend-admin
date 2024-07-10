@@ -31,12 +31,12 @@
       <a-row class="material-list" :gutter="20">
         <a-col v-for="colItem in colList" :key="colItem.id" :span="option.gridSpan">
           <div v-for="item in colItem.list" :key="item.id" class="material-list-item">
-            <img
+            <lazy-image
               v-if="item.type == 'image'"
               :src="item.path"
               @error="
-                (e) => {
-                  onImageError(e, item);
+                () => {
+                  item.path = '';
                 }
               "
             />
@@ -106,6 +106,7 @@
   import debounce from 'lodash/debounce';
   import materialSelector from '@/components/material/selectDialog.vue';
   import { MaterialListItem, MaterialType } from '@/types/material';
+  import lazyImage from '@/components/lazy-image/index.vue';
 
   const slectionDialogVisible = ref(false);
   const onShowSelectionDialog = () => {
@@ -165,7 +166,7 @@
   });
   function loadData() {
     setLoading(true);
-    getList({ ...filter, ...pagination })
+    return getList({ ...filter, ...pagination })
       .then(({ data }) => {
         if (pagination.page === 1) {
           clearCol();
@@ -219,11 +220,6 @@
       refMap[`${item.id}`] = el;
     }
   };
-  function onImageError(event, item) {
-    if (event && event.target) event.target.src = 'https://qiniu.ruashi.cn/image-error.png';
-
-    item.path = '';
-  }
   function onPreview(item) {
     switch (item.type) {
       case 'image':

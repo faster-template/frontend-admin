@@ -33,7 +33,7 @@
     </a-space>
     <a-divider :margin="10"></a-divider>
     <a-spin :loading="loading">
-      <div class="material-list">
+      <lazyImageWrapper class="material-list">
         <div
           v-for="item in list"
           :key="item.id"
@@ -42,10 +42,10 @@
         >
           <img
             v-if="item.type == 'image'"
-            :src="item.path"
+            :data-src="item.path"
             @error="
-              (e) => {
-                onImageError(e, item);
+              () => {
+                item.path = '';
               }
             "
           />
@@ -63,9 +63,9 @@
             <icon-file-audio v-if="item.type == 'audio'" style="color: rgb(var(--orange-6))" />
             <icon-drive-file v-if="item.type == 'file'" style="color: rgb(var(--red-5))" />
           </div>
-          <div v-if="!item.path" class="error-message"> 图片加载失败 </div>
+          <div v-if="!item.path" class="error-message"> 加载失败 </div>
         </div>
-      </div></a-spin
+      </lazyImageWrapper></a-spin
     >
   </a-modal>
 </template>
@@ -75,6 +75,7 @@
   import useLoading from '@/hooks/loading';
   import { reactive, toRefs } from 'vue';
   import { MaterialListItem, MaterialType } from '@/types/material';
+  import lazyImageWrapper from '@/components/lazy-image/wrapper.vue';
 
   const visible = defineModel('visible', {
     type: Boolean,
@@ -91,11 +92,6 @@
     total: 0,
     selection: {} as MaterialListItem,
   });
-  function onImageError(event, item) {
-    if (event && event.target) event.target.src = 'https://qiniu.ruashi.cn/image-error.png';
-
-    item.path = '';
-  }
 
   function onSelect(item) {
     if (item.path) option.selection = item;
@@ -140,6 +136,7 @@
   .material-select-dialog-comp-container {
     .header-filter {
       display: flex;
+
       .filter-item {
         display: flex;
         align-items: center;
@@ -150,65 +147,70 @@
         }
       }
     }
+
     .material-list {
       height: 400px;
-      overflow-x: hidden;
-      overflow-y: scroll;
+      overflow: hidden scroll;
+
       &-item {
         position: relative;
-        overflow: hidden;
-        margin-bottom: 12px;
         display: inline-block;
+        box-sizing: border-box;
         margin-right: 10px;
         margin-bottom: 10px;
-        box-sizing: border-box;
+        overflow: hidden;
         border: 2px solid transparent;
+
         img,
         video {
+          display: block;
           width: 100px;
           height: 100px;
-          display: block;
         }
+
         .item-file {
           width: 100px;
           height: 100px;
-          text-align: center;
-          color: #666666;
-          line-height: 18px;
-          font-size: 12px;
           padding: 10px 0;
-          border: 1px solid #cccccc;
+          color: #666;
+          font-size: 12px;
+          line-height: 18px;
+          text-align: center;
+          border: 1px solid #ccc;
         }
       }
+
       &-item.is-active {
         border: 2px solid rgb(var(--arcoblue-6));
       }
+
       .icon {
         position: absolute;
         bottom: 0;
         left: 0;
-        height: 24px;
-        line-height: 24px;
-        padding: 0 4px 0 4px;
-        font-size: 16px;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: rgb(var(--blue-5));
         z-index: 10;
+        height: 24px;
+        padding: 0 4px;
+        color: rgb(var(--blue-5));
+        font-size: 16px;
+        line-height: 24px;
+        background-color: rgb(0 0 0 / 50%);
         border-radius: 0 8px 8px 0;
       }
+
       .error-message {
         position: absolute;
         bottom: 0;
         left: 0;
         display: flex;
-        background-color: rgba(0, 0, 0, 0.5);
-        width: 100%;
-        color: #ffffff;
-        height: 24px;
-        line-height: 24px;
-        font-size: 12px;
         align-items: center;
         justify-content: space-evenly;
+        width: 100%;
+        height: 24px;
+        color: #fff;
+        font-size: 12px;
+        line-height: 24px;
+        background-color: rgb(0 0 0 / 50%);
       }
     }
   }
