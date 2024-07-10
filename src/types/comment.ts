@@ -16,4 +16,5 @@ export interface CommentDetail {
   createTime: string;
   creator: UserInfo;
   children: CommentDetail[];
+  state?: number;
 }

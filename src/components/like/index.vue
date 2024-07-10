@@ -1,5 +1,5 @@
 <template>
-  <div class="article-comp-like-container">
+  <div class="like-comp-container">
     <a-button-group type="outline" size="mini">
       <a-button @click="onLike">
         <template #icon

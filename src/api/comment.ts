@@ -9,8 +9,8 @@ export function createComments(data: CommentCreateBody) {
   return axios.post('/comment/create', data);
 }
 
-export function deleteComments(data: CommentCreateBody) {
-  return axios.post('/comment/delete', data);
+export function deleteComments(id: string) {
+  return axios.post('/comment/delete', null, { params: { id } });
 }
 
 export default null;

@@ -17,7 +17,8 @@
             <span class="auther-info-updatetime">{{ article.updateTime }}</span>
           </div>
           <div class="content" v-html="article.content"> </div>
-          <commentList :relation-id="props.id" relation-type="article"></commentList> </div
+          <like :relation-id="props.id" relation-type="article"></like>
+          <comment :relation-id="props.id" relation-type="article"></comment> </div
       ></a-spin> </a-modal
   ></div>
 </template>
@@ -28,7 +29,8 @@
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
   import DOMPurify from 'dompurify';
-  import commentList from './commentList.vue';
+  import comment from '@/components/comment/index.vue';
+  import like from '@/components/like/index.vue';
 
   const props = defineProps({
     id: { type: String, default: null },
@@ -70,25 +72,38 @@
 <style lang="less" scoped>
   .article-comp-preview-dialog {
     :deep(.arco-modal-header) {
-      min-height: 48px;
-      line-height: 24px;
       height: auto;
+      min-height: 48px;
       padding: 12px;
+      line-height: 24px;
       text-align: center;
     }
+
     :deep(.article-preview-body) {
       max-height: 500px;
     }
+
     .article-wrapper {
       .auther-info {
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         span {
+          color: #666;
           font-size: 12px;
-          color: #666666;
         }
       }
+
+      .content {
+        :deep(img) {
+          max-width: 100%;
+        }
+      }
+    }
+
+    :deep(.like-comp-container) {
+      text-align: right;
     }
   }
 </style>

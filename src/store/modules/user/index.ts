@@ -16,7 +16,8 @@ const useUserStore = defineStore('user', {
 
   getters: {
     userInfo(state: UserState): UserState {
-      return { ...state };
+      const { avatarUrl, nickName, userName, phone, id } = state;
+      return { avatarUrl, nickName, userName, phone, id };
     },
   },
 

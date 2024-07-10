@@ -6,12 +6,7 @@ import svgLoader from 'vite-svg-loader';
 import configArcoStyleImportPlugin from './plugin/arcoStyleImport';
 
 export default defineConfig({
-  plugins: [
-    vue(),
-    vueJsx(),
-    svgLoader({ svgoConfig: {} }),
-    configArcoStyleImportPlugin(),
-  ],
+  plugins: [vue(), vueJsx(), svgLoader({ svgoConfig: {} }), configArcoStyleImportPlugin()],
   resolve: {
     alias: [
       {
@@ -35,14 +30,13 @@ export default defineConfig({
   },
   define: {
     'process.env': {},
+    '__VUE_PROD_HYDRATION_MISMATCH_DETAILS__': 'true',
   },
   css: {
     preprocessorOptions: {
       less: {
         modifyVars: {
-          hack: `true; @import (reference) "${resolve(
-            'src/assets/style/breakpoint.less'
-          )}";`,
+          hack: `true; @import (reference) "${resolve('src/assets/style/breakpoint.less')}";`,
         },
         javascriptEnabled: true,
       },
