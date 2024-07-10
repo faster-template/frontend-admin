@@ -9,7 +9,6 @@
         v-for="item in commentData.items"
         :key="item.id"
         :data="item"
-        :relation-id
         @delete="onCommentDelete"
       ></commentSingle>
     </div>
