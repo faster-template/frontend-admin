@@ -14,7 +14,7 @@
           allow-clear
           class="filter-item-input"
           placeholder="选择素材类型"
-          :options="MaterialType"
+          :options="materialTypeOption"
         >
         </a-select>
       </div>
@@ -27,8 +27,9 @@
               loadData();
             }
           "
-          >筛选</a-button
+          >刷新</a-button
         >
+        <a-button type="primary" @click="onShowCreateDialog">添加新素材</a-button>
       </a-space>
     </a-space>
     <a-divider :margin="10"></a-divider>
@@ -68,21 +69,30 @@
       </lazyImageWrapper></a-spin
     >
   </a-modal>
+
+  <createMaterialDialog
+    v-model:visible="createDialogVisible"
+    :keep-open="false"
+    :show-success-message="false"
+    :accept-type="[filter.type]"
+    @success="onCreateSuccess"
+  >
+  </createMaterialDialog>
 </template>
 
 <script setup lang="ts">
   import { getList } from '@/api/material';
   import useLoading from '@/hooks/loading';
-  import { reactive, toRefs } from 'vue';
-  import { MaterialListItem, MaterialType } from '@/types/material';
+  import { reactive, ref, toRefs } from 'vue';
+  import { MaterialListItem, materialTypeOption } from '@/types/material';
   import lazyImageWrapper from '@/components/lazy-image/wrapper.vue';
+  import createMaterialDialog from './createDialog.vue';
 
   const visible = defineModel('visible', {
     type: Boolean,
     default: false,
   });
 
-  const emits = defineEmits(['ok']);
   const props = defineProps({
     type: String,
     default: null,
@@ -96,6 +106,8 @@
   function onSelect(item) {
     if (item.path) option.selection = item;
   }
+
+  const emits = defineEmits(['ok']);
   function onOk() {
     if (option.selection?.path) {
       emits('ok', option.selection?.path);
@@ -130,6 +142,15 @@
       });
   }
   loadData();
+
+  const createDialogVisible = ref(false);
+  const onShowCreateDialog = () => {
+    createDialogVisible.value = true;
+  };
+  const onCreateSuccess = (path) => {
+    emits('ok', path);
+    visible.value = false;
+  };
 </script>
 
 <style lang="less" scoped>

@@ -8,7 +8,7 @@
           allow-clear
           class="filter-item-input"
           placeholder="选择素材类型"
-          :options="MaterialType"
+          :options="materialTypeOption"
         >
         </a-select>
       </div>
@@ -21,8 +21,9 @@
               loadData();
             }
           "
-          >筛选</a-button
+          >筛选/刷新</a-button
         >
+        <a-button type="primary" @click="onShowCreateDialog">添加新素材</a-button>
         <a-button type="primary" @click="onShowSelectionDialog">演示-打开选择器</a-button>
       </a-space>
     </a-space>
@@ -42,12 +43,12 @@
             />
             <video
               v-else-if="item.type == 'video'"
-              :ref="(el) => setRefMap(el, item)"
+              :ref="(el) => setRefMap(el, item as MaterialListItem)"
               :src="item.path"
             ></video>
             <audio
               v-else-if="item.type == 'audio'"
-              :ref="(el) => setRefMap(el, item)"
+              :ref="(el) => setRefMap(el, item as MaterialListItem)"
               :src="item.path"
             ></audio>
             <div v-else class="item-file">
@@ -63,11 +64,11 @@
               <icon-drive-file v-if="item.type == 'file'" />
             </div>
             <div v-if="item.path" class="operator">
-              <a-tooltip v-if="['image'].includes(item.type)" content="预览">
+              <a-tooltip v-if="['image'].includes((item as MaterialListItem).type)" content="预览">
                 <icon-eye @click="onPreview(item)"
               /></a-tooltip>
               <a-tooltip
-                v-else-if="['video', 'audio'].includes(item.type)"
+                v-else-if="['video', 'audio'].includes((item as MaterialListItem).type)"
                 :content="item.mediaStatus == 0 ? '播放' : '暂停'"
               >
                 <icon-play-circle-fill v-if="item.mediaStatus == 0" @click="onPreview(item)" />
@@ -94,6 +95,12 @@
         }
       "
     ></materialSelector>
+    <createMaterialDialog
+      v-model:visible="createDialogVisible"
+      :keep-open="true"
+      :accept-type="['other']"
+    >
+    </createMaterialDialog>
   </div>
 </template>
 
@@ -105,22 +112,26 @@
   import { copy2clipboard } from '@/utils';
   import debounce from 'lodash/debounce';
   import materialSelector from '@/components/material/selectDialog.vue';
-  import { MaterialListItem, MaterialType } from '@/types/material';
+  import { MaterialListItem, materialTypeOption } from '@/types/material';
   import lazyImage from '@/components/lazy-image/index.vue';
+  import createMaterialDialog from '@/components/material/createDialog.vue';
 
   const slectionDialogVisible = ref(false);
   const onShowSelectionDialog = () => {
     slectionDialogVisible.value = true;
   };
-
+  const createDialogVisible = ref(false);
+  const onShowCreateDialog = () => {
+    createDialogVisible.value = true;
+  };
   interface ColList {
     id: string;
-    list: MaterialListItem[];
+    list: Partial<MaterialListItem>[];
   }
 
   const option = reactive({
     colList: [] as ColList[],
-    list: [] as MaterialListItem[],
+    list: [] as Partial<MaterialListItem>[],
     total: 0,
     gridCol: 0,
     gridSpan: 0,
@@ -129,7 +140,7 @@
   const { colList } = toRefs(option);
 
   const materialContainertRef = ref();
-  function appendColList(listData: MaterialListItem[]) {
+  function appendColList(listData: Partial<MaterialListItem>[]) {
     // 增加瀑布流追加偏移，防止每次加载数据都从第一列追加
     // 选择最少数据列开始追加
     const offset = option.colList.reduce(
@@ -293,6 +304,7 @@
           display: block;
           width: 100%;
           height: auto;
+          max-height: 200px;
         }
 
         .item-file {

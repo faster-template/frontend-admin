@@ -1,5 +1,5 @@
 <template>
-  <img ref="imgRef" :src="originSrc" style="width: 100%; height: auto" @error="onError" />
+  <img ref="imgRef" :src="originSrc" style="width: 100%; height: auto" />
 </template>
 
 <script setup lang="ts">
@@ -28,15 +28,17 @@
   });
 
   const imgRef = ref();
-  onMounted(() => {
-    observer.observe(imgRef.value);
-  });
   const emits = defineEmits(['error']);
   function onError(event: Event) {
+    const el = imgRef.value;
     const target = event?.target as HTMLImageElement;
-    // 图片加载失败
     target.src = import.meta.env.VITE_DEFAULT_IMAGE_SRC_ERROR;
-    target.onerror = null;
+    el.removeEventListener('error', onError);
     emits('error', event);
   }
+  onMounted(() => {
+    const el = imgRef.value;
+    el.addEventListener('error', onError);
+    observer.observe(el);
+  });
 </script>
