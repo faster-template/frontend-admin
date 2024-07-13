@@ -28,10 +28,8 @@ export const ossTypeOption = [
   },
 ];
 
-// 限制上传的文件类型
-
-export const acceptImages = [
-  // 图片
+// 图片
+export const acceptImages: string[] = [
   'image/jpeg',
   'image/png',
   'image/gif',
@@ -39,22 +37,14 @@ export const acceptImages = [
   'image/webp',
 ];
 
-export const acceptVideos = [
-  // 视频
-  'video/mp4',
-  'video/x-flv',
-  'video/ogg',
-  'video/webm',
-];
+// 视频
+export const acceptVideos: string[] = ['video/mp4', 'video/x-flv', 'video/ogg', 'video/webm'];
 
-export const acceptAudios = [
-  // 音频
-  'audio/mpeg',
-  'audio/ogg',
-];
+// 音频
+export const acceptAudios: string[] = ['audio/mpeg', 'audio/ogg'];
 
-export const acceptDocs = [
-  // 文档
+// 文档
+export const acceptDocs: string[] = [
   'application/msword',
   'application/vnd.ms-excel',
   'application/vnd.ms-powerpoint',
@@ -62,4 +52,11 @@ export const acceptDocs = [
   'text/plain',
 ];
 
-export const acceptTypes = [...acceptImages, ...acceptAudios, ...acceptVideos, ...acceptDocs];
+export const acceptTypes: string[] = [
+  ...acceptImages,
+  ...acceptAudios,
+  ...acceptVideos,
+  ...acceptDocs,
+];
+
+export default null;

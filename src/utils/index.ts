@@ -5,4 +5,6 @@ export * from './event';
 export * from './auth';
 export * from './csrf';
 export * from './navigator';
+export * from './debounce';
+export * from './throttle';
 export default null;

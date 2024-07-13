@@ -1,10 +1,3 @@
-export const state = {
-  '-2': 'disabled',
-  '-1': 'deleted',
-  '0': 'draft',
-  '1': 'normal',
-  '2': 'pending',
-};
 // --- 下方正则和后端请保持同步
 export const RegPassword = {
   match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,20}$/,

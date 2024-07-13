@@ -84,7 +84,7 @@
   import { Message } from '@arco-design/web-vue';
   import { modifyNickName, modifyPwd, modifyUserName, modifyAvatar } from '@/api/user';
   import debounce from 'lodash/debounce';
-  import { RegNickName, RegPassword, RegUserName } from '@/consts';
+  import { RegNickName, RegPassword, RegUserName } from '@/constants';
   import UploadImage from '@/components/upload/uploadImage.vue';
 
   const userStore = useUserStore();

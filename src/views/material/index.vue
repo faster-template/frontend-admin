@@ -115,7 +115,7 @@
   import { MaterialListItem } from '@/types/material';
   import lazyImage from '@/components/lazy-image/index.vue';
   import createMaterialDialog from '@/components/material/createDialog.vue';
-  import { materialTypeOption } from '@/option/material';
+  import { materialTypeOption } from '@/constants/material';
 
   const slectionDialogVisible = ref(false);
   const onShowSelectionDialog = () => {

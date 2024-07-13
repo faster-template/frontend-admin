@@ -1,27 +1,25 @@
 <template>
   <div class="table-container">
-    <a-space class="header-filter">
+    <div class="header-filter">
       <slot name="filter-fields"></slot>
-      <a-space class="filter-item">
-        <a-button :loading="loading" type="primary" @click="queryList">筛选/刷新</a-button>
-        <slot name="filter-button" :loading="loading"></slot>
-      </a-space>
-    </a-space>
+      <a-button :loading="loading" type="primary" @click="queryList">筛选/刷新</a-button>
+      <slot name="filter-button" :loading="loading"></slot>
+    </div>
     <a-divider :margin="10"></a-divider>
     <a-table
       :columns="props.columns"
       :data="dataList"
-      :pagination="pagination"
+      :pagination="pagination4Table"
       :loading="loading"
       @page-change="
         (page) => {
-          pagination.current = page;
+          pagination4Table.current = page;
           queryList();
         }
       "
       @page-size-change="
         (pageSize) => {
-          pagination.pageSize = pageSize;
+          pagination4Table.pageSize = pageSize;
           queryList();
         }
       "
@@ -36,9 +34,9 @@
 <script setup lang="ts">
   import { reactive, toRefs, PropType, useSlots, computed } from 'vue';
   import { TableColumnData } from '@arco-design/web-vue';
-  import { AnyObject, Pagination } from '@/types/global';
+  import { AnyObject, Pagination, PaginationQuery } from '@/types/global';
   import useLoading from '@/hooks/loading';
-  import debounce from 'lodash/debounce';
+  import { debounce } from '@/utils';
   import { AxiosResponse } from 'axios';
 
   const filter = defineModel('filter', {
@@ -57,16 +55,28 @@
       type: Function as PropType<(...args) => Promise<AxiosResponse>>,
       required: true,
     },
+    pagination: {
+      type: [Object, false] as PropType<PaginationQuery | false>,
+      default: () => {
+        return {
+          size: 20,
+          page: 1,
+          // order: 'desc',
+          // orderBy: 'createTime',
+        } as PaginationQuery;
+      },
+    },
   });
   const option = reactive({
     dataList: [],
-    pagination: {
+    // 给ArcoTable用的分页数据
+    pagination4Table: {
       total: 0,
-      current: 1,
-      pageSize: 20,
+      current: (props.pagination && props.pagination.page) || 1,
+      pageSize: (props.pagination && props.pagination.size) || 1,
     } as Pagination,
   });
-  const { dataList, pagination } = toRefs(option);
+  const { dataList, pagination4Table } = toRefs(option);
 
   const slots = useSlots();
   const curSlotName = ['filter-fields', 'filter-button'];
@@ -82,45 +92,54 @@
   });
 
   const { loading, setLoading } = useLoading();
-  const queryListDebounce = debounce(() => {
-    const query = {
-      ...filter.value,
-      page: option.pagination.current,
-      size: option.pagination.pageSize,
-    };
-    props
-      .fetchApi(query)
-      .then(({ data }) => {
-        option.dataList = data.items;
-        option.pagination.total = data.total;
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, 500);
+  const queryListDebounce = debounce(
+    () => {
+      const query = {
+        ...filter.value,
+      };
+      if (props.pagination) {
+        Object.assign(query, {
+          page: option.pagination4Table.current,
+          size: option.pagination4Table.pageSize,
+        });
+      }
+      props
+        .fetchApi(query)
+        .then(({ data }) => {
+          option.dataList = data.items || data;
+          option.pagination4Table.total = data.total || data.length;
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+    5000,
+    true
+  );
 
   const queryList = () => {
     setLoading(true);
     queryListDebounce();
   };
   queryList();
+  defineExpose({ queryList });
 </script>
 
 <style lang="less" scoped>
   .table-container {
-    margin: 0 20px;
-    padding: 10px;
     background-color: #fff;
 
+    :deep(.header-filter),
     .header-filter {
       display: flex;
 
       .filter-item {
         display: flex;
         align-items: center;
+        word-break: keep-all;
 
         &-label {
-          padding-right: 20px;
+          padding-right: 8px;
           color: #666;
           text-align: right;
         }
@@ -129,6 +148,10 @@
         :deep(.filter-item-input) {
           width: 200px;
         }
+      }
+
+      & > *:nth-last-child(n + 1) {
+        margin-right: 12px;
       }
     }
   }

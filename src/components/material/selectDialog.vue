@@ -84,7 +84,8 @@
   import { getList } from '@/api/material';
   import useLoading from '@/hooks/loading';
   import { reactive, ref, toRefs } from 'vue';
-  import { MaterialListItem, materialTypeOption } from '@/types/material';
+  import { MaterialListItem } from '@/types/material';
+  import { materialTypeOption } from '@/constants/material';
   import lazyImageWrapper from '@/components/lazy-image/wrapper.vue';
   import createMaterialDialog from './createDialog.vue';
 

@@ -50,7 +50,7 @@
     acceptDocs,
     acceptVideos,
     acceptTypes,
-  } from '@/types/material';
+  } from '@/constants/material';
   import { uploadFile } from '@/api/upload';
   import { Message } from '@arco-design/web-vue';
 
