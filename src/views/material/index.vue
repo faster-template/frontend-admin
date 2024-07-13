@@ -112,9 +112,10 @@
   import { copy2clipboard } from '@/utils';
   import debounce from 'lodash/debounce';
   import materialSelector from '@/components/material/selectDialog.vue';
-  import { MaterialListItem, materialTypeOption } from '@/types/material';
+  import { MaterialListItem } from '@/types/material';
   import lazyImage from '@/components/lazy-image/index.vue';
   import createMaterialDialog from '@/components/material/createDialog.vue';
+  import { materialTypeOption } from '@/option/material';
 
   const slectionDialogVisible = ref(false);
   const onShowSelectionDialog = () => {

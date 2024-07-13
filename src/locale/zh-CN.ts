@@ -15,6 +15,8 @@ export default {
   'menu.setting.userinfo': '用户信息',
   'menu.material': '素材',
   'menu.material.list': '素材管理',
+  'menu.user': '用户管理',
+  'menu.user.list': '用户列表',
 
   'state.disabled': '已禁用',
   'state.deleted': '已删除',

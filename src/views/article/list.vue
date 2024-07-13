@@ -1,57 +1,23 @@
 <template>
   <div class="article-list-container">
-    <a-space class="header-filter">
-      <div class="filter-item">
-        <div class="filter-item-label">分类</div>
-        <categorySelector
-          v-model="filter.categoryId"
-          parent-key="ARTICLE"
-          :class-name="'filter-item-input'"
-        >
-        </categorySelector>
-      </div>
-      <div class="filter-item">
-        <div class="filter-item-label">标题</div>
-        <a-input v-model="filter.title" class="filter-item-input" placeholder="输入标题筛选">
-        </a-input>
-      </div>
-      <a-space class="filter-item">
-        <a-button
-          type="primary"
-          @click="
-            () => {
-              pagination.current = 1;
-              queryList();
-            }
-          "
-          >筛选</a-button
-        >
-        <a-button @click="createNew">新增</a-button>
-      </a-space>
-    </a-space>
-    <a-divider :margin="10"></a-divider>
-    <!-- 列表 -->
-    <a-table
-      :columns="columns"
-      :data="dataList"
-      :pagination="pagination"
-      :loading="tableLoad.loading.value"
-      @page-change="
-        (page) => {
-          pagination.current = page;
-          queryList();
-        }
-      "
-      @page-size-change="
-        (pageSize) => {
-          pagination.pageSize = pageSize;
-          queryList();
-        }
-      "
-    >
-      <template #title="{ record }">
-        {{ record.title.slice(0, 20) + record.title.length > 20 ? '...' : '' }}
+    <custom-table ref="tableRef" v-model:filter="filter" :fetch-api="list" :columns="columns">
+      <template #filter-fields>
+        <div class="filter-item">
+          <div class="filter-item-label">分类</div>
+          <categorySelector
+            v-model="filter.categoryId"
+            parent-key="ARTICLE"
+            :class-name="'filter-item-input'"
+          >
+          </categorySelector>
+        </div>
+        <div class="filter-item">
+          <div class="filter-item-label">标题</div>
+          <a-input v-model="filter.title" class="filter-item-input" placeholder="输入标题筛选">
+          </a-input>
+        </div>
       </template>
+      <template #filter-button> <a-button @click="createNew">新增</a-button></template>
       <template #category="{ record }">
         {{ record.category && record.category.name }}
       </template>
@@ -66,11 +32,7 @@
         }}<a-popconfirm
           :content="`确定${record.state == 1 ? '下架' : '发布'}么？`"
           type="warning"
-          :on-before-ok="
-            (done) => {
-              changeState(record, done);
-            }
-          "
+          :on-before-ok="(done) => changeState(record, done)"
         >
           <a-button
             style="margin-left: 20px"
@@ -91,19 +53,13 @@
           <a-button size="mini" @click="onPreview(record.id)">
             <template #icon> <icon-eye /> </template>预览</a-button
           >
-
           <a-button size="mini" @click="router.push(`/article/edit/${record.id}`)">
             <template #icon> <icon-edit /> </template>编辑</a-button
           >
-
           <a-popconfirm
             content="确定删除这篇文章么？"
             type="warning"
-            :on-before-ok="
-              (done) => {
-                delOne(record.id, done);
-              }
-            "
+            :on-before-ok="(done) => delOne(record.id, done)"
           >
             <a-button size="mini" type="primary" status="danger" :disabled="record.state === 1">
               <template #icon> <icon-delete /> </template>删除</a-button
@@ -111,7 +67,8 @@
           >
         </a-space>
       </template>
-    </a-table>
+    </custom-table>
+
     <previewDialog
       v-if="preivewOption.visible"
       :id="preivewOption.id"
@@ -121,15 +78,14 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive, toRefs } from 'vue';
+  import { reactive, ref, toRefs } from 'vue';
   import { useRouter } from 'vue-router';
   import { Message } from '@arco-design/web-vue';
 
   import { del, list, publish, unPublish } from '@/api/article';
-  import { state } from '@/consts';
+  import { state } from '@/constants';
   import categorySelector from '@/components/category/selector.vue';
-  import useLoading from '@/hooks/loading';
-  import debounce from 'lodash/debounce';
+  import customTable from '@/components/table/index.vue';
   import previewDialog from './components/previewDialog.vue';
 
   const router = useRouter();
@@ -139,14 +95,8 @@
       title: '',
       categoryId: null,
     },
-    pagination: {
-      total: 0,
-      current: 1,
-      pageSize: 20,
-    },
   });
-  const { filter, dataList, pagination } = toRefs(option);
-  const tableLoad = useLoading();
+  const { filter } = toRefs(option);
   const columns = [
     {
       title: '标题',
@@ -186,26 +136,6 @@
       slotName: 'operator',
     },
   ];
-  const queryListDebounce = debounce(() => {
-    const query = {
-      ...option.filter,
-      page: option.pagination.current,
-      size: option.pagination.pageSize,
-    };
-    list(query)
-      .then(({ data }) => {
-        option.dataList = data.items;
-        option.pagination.total = data.total;
-      })
-      .finally(() => {
-        tableLoad.setLoading(false);
-      });
-  }, 500);
-  const queryList = () => {
-    tableLoad.setLoading(true);
-    queryListDebounce();
-  };
-  queryList();
 
   const preivewOption = reactive({
     id: '',
@@ -218,13 +148,13 @@
   const createNew = () => {
     router.push('/article/create');
   };
+  const tableRef = ref();
   const changeState = (article, done) => {
     const func = article.state === 1 ? unPublish : publish;
-
     func(article.id)
       .then(() => {
         Message.success(`${article.state === 1 ? '下架' : '发布'}成功`);
-        queryList();
+        tableRef.value.queryList();
       })
       .finally(() => {
         done();
@@ -233,7 +163,7 @@
   const delOne = (id, done) => {
     del(id)
       .then(() => {
-        queryList();
+        tableRef.value.queryList();
       })
       .finally(() => {
         done(true);
@@ -246,26 +176,5 @@
     margin: 0 20px;
     padding: 10px;
     background-color: #fff;
-
-    .header-filter {
-      display: flex;
-
-      .filter-item {
-        display: flex;
-        align-items: center;
-
-        &-label {
-          width: 60px;
-          padding-right: 20px;
-          color: #666;
-          text-align: right;
-        }
-
-        &-input,
-        :deep(.filter-item-input) {
-          width: 200px;
-        }
-      }
-    }
   }
 </style>
