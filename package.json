@@ -11,7 +11,7 @@
     "report": "cross-env REPORT=true npm run build",
     "preview": "npm run build && vite preview --host",
     "type:check": "vue-tsc --noEmit --skipLibCheck",
-    "lint": "npx lint-staged",
+    "lint": "vue-tsc --noEmit && npx lint-staged",
     "lint-staged": "npx lint-staged",
     "prepare": "husky install"
   },

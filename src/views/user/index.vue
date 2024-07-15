@@ -76,8 +76,8 @@
     dataList: [],
     filter: {
       userName: '',
-      nickName: null,
-      state: null,
+      nickName: '',
+      state: '',
     },
   });
   const { filter } = toRefs(option);
