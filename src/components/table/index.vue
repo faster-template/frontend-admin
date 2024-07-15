@@ -92,8 +92,9 @@
   });
 
   const { loading, setLoading } = useLoading();
-  const queryListDebounce = debounce(
+  const queryList = debounce(
     () => {
+      setLoading(true);
       const query = {
         ...filter.value,
       };
@@ -113,14 +114,9 @@
           setLoading(false);
         });
     },
-    5000,
+    500,
     true
   );
-
-  const queryList = () => {
-    setLoading(true);
-    queryListDebounce();
-  };
   queryList();
   defineExpose({ queryList });
 </script>
@@ -145,8 +141,8 @@
         }
 
         &-input,
-        :deep(.filter-item-input) {
-          width: 200px;
+        .filter-item-input {
+          width: 180px;
         }
       }
 

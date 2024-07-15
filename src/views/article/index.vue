@@ -28,7 +28,7 @@
         {{ record.creator.nickName }}
       </template>
       <template #state="{ record }">
-        {{ $t(`state.${state[record.state]}`)
+        {{ articleState[record.state]
         }}<a-popconfirm
           :content="`确定${record.state == 1 ? '下架' : '发布'}么？`"
           type="warning"
@@ -83,7 +83,7 @@
   import { Message } from '@arco-design/web-vue';
 
   import { del, list, publish, unPublish } from '@/api/article';
-  import { state } from '@/constants';
+  import { articleState } from '@/constants';
   import categorySelector from '@/components/category/selector.vue';
   import customTable from '@/components/table/index.vue';
   import previewDialog from './components/previewDialog.vue';

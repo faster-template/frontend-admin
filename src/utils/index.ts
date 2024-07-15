@@ -7,4 +7,5 @@ export * from './csrf';
 export * from './navigator';
 export * from './debounce';
 export * from './throttle';
+export * from './global';
 export default null;

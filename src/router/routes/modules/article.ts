@@ -21,7 +21,7 @@ const ARTICLE: AppRouteRecordRaw = {
         requiresAuth: true,
         order: 1,
       },
-      component: () => import('@/views/article/list.vue'),
+      component: () => import('@/views/article/index.vue'),
     },
     {
       path: 'create',
