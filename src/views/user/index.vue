@@ -69,7 +69,8 @@
   import { reactive, ref, toRefs } from 'vue';
   import { userState } from '@/constants';
   import { list, setState } from '@/api/user-manage';
-  import { debounce, object2Options } from '@/utils';
+  import { debounce } from '@/utils/debounce';
+  import { object2Options } from '@/utils/global';
   import customTable from '@/components/table/index.vue';
 
   const option = reactive({

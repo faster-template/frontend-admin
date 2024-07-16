@@ -1,6 +1,6 @@
 import { Message } from '@arco-design/web-vue';
 
-export default (text) => {
+export const copy2clipboard = (text) => {
   const copyipt = document.createElement('input');
   copyipt.setAttribute('value', text);
   document.body.appendChild(copyipt);
@@ -14,3 +14,5 @@ export default (text) => {
   }
   return !!result;
 };
+
+export default null;

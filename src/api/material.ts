@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from './axios';
 
 export function getList(query) {
   return axios.get('/material/getList', { params: { ...query } });

@@ -109,7 +109,7 @@
   import { Message } from '@arco-design/web-vue';
   import { onBeforeUnmount, onMounted, reactive, ref, toRefs } from 'vue';
   import useLoading from '@/hooks/loading';
-  import { copy2clipboard } from '@/utils';
+  import { copy2clipboard } from '@/utils/copy2clipboard';
   import debounce from 'lodash/debounce';
   import materialSelector from '@/components/material/selectDialog.vue';
   import { MaterialListItem } from '@/types/material';

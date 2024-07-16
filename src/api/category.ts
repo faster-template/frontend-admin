@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from './axios';
 
 export function list() {
   return axios.get('/category/getList');

@@ -1,6 +1,6 @@
-import axios from 'axios';
 import type { RouteRecordNormalized } from 'vue-router';
 import { UserState } from '@/store/modules/user/types';
+import axios from './axios';
 
 export interface LoginData {
   username: string;

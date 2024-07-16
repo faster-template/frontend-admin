@@ -1,5 +1,5 @@
 import { CommentCreateBody, CommentQueryParams } from '@/types/comment';
-import axios from 'axios';
+import axios from './axios';
 
 export function getComments(query: CommentQueryParams) {
   return axios.get('/comment/getList', { params: { ...query } });

@@ -1,4 +1,4 @@
-import { AnyObject, Options } from '@/types';
+import { AnyObject, Options } from '@/types/global';
 
 export function object2Options(obj: AnyObject): Options[] {
   return Object.keys(obj).map((key) => {

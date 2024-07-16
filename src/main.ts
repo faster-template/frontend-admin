@@ -11,7 +11,8 @@ import App from './App.vue';
 // 样式通过 arco-plugin 插件导入。详见目录文件 config/plugin/arcoStyleImport.ts
 // https://arco.design/docs/designlab/use-theme-package
 import '@/assets/style/global.less';
-import '@/api/interceptor';
+import errorPlugin from './common/error-handler';
+// import '@/api/interceptor';
 
 const app = createApp(App);
 
@@ -23,5 +24,5 @@ app.use(store);
 app.use(i18n);
 app.use(globalComponents);
 app.use(directive);
-
+app.use(errorPlugin, { router });
 app.mount('#app');

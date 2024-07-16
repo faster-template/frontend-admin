@@ -1,5 +1,5 @@
 import { LikeCreateParams, LikeDeletearams, LikeQueryParams } from '@/types/like';
-import axios from 'axios';
+import axios from './axios';
 
 export function likeAdd(data: LikeCreateParams) {
   return axios.post('/like/add', data);

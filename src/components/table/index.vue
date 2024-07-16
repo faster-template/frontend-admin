@@ -36,7 +36,7 @@
   import { TableColumnData } from '@arco-design/web-vue';
   import { AnyObject, Pagination, PaginationQuery } from '@/types/global';
   import useLoading from '@/hooks/loading';
-  import { debounce } from '@/utils';
+  import { debounce } from '@/utils/debounce';
   import { AxiosResponse } from 'axios';
 
   const filter = defineModel('filter', {

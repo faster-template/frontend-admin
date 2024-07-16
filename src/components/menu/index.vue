@@ -5,7 +5,7 @@
   import type { RouteMeta } from 'vue-router';
   import { useAppStore } from '@/store';
   import { listenerRouteChange } from '@/router/emit';
-  import { isUrl } from '@/utils';
+  import { isUrl } from '@/utils/is';
   import useMenuTree from './use-menu-tree';
 
   export default defineComponent({
@@ -142,6 +142,7 @@
       display: flex;
       align-items: center;
     }
+
     .arco-icon {
       &:not(.arco-icon-down) {
         font-size: 18px;

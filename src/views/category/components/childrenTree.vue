@@ -85,7 +85,7 @@
 
   import useLoading from '@/hooks/loading';
   import { getChildren, del, sort } from '@/api/category';
-  import { copy2clipboard } from '@/utils';
+  import { copy2clipboard } from '@/utils/copy2clipboard';
   import debounce from 'lodash/debounce';
   import { ICategory } from '../types';
   import modifyDialog from './createOrEditDialog.vue';

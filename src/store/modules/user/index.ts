@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { login as userLogin, getUserInfo, LoginData } from '@/api/user';
-import { setToken, clearToken, setCSRF } from '@/utils';
+import { setToken, clearToken } from '@/utils/auth';
+import { setCSRF } from '@/utils/csrf';
 import { removeRouteListener } from '@/router/emit';
 import { UserState } from './types';
 import useAppStore from '../app';

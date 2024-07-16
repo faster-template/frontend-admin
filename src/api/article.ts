@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from './axios';
 
 export function list(query) {
-  return axios.get('/article/getList', { params: { ...query } });
+  return axios.get('/article/getList', { params: { ...query }, cache: 200 });
 }
 
 export function getDetail(id: string) {
