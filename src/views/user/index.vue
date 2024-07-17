@@ -13,6 +13,22 @@
           </a-input>
         </div>
         <div class="filter-item">
+          <div class="filter-item-label">角色</div>
+          <a-select
+            v-model="filter.role"
+            class="filter-item-input"
+            placeholder="选择角色筛选"
+            allow-clear
+          >
+            <a-option
+              v-for="item in userRoleOptions"
+              :key="(item.value as string)"
+              :value="(item.value as string)"
+              >{{ item.label }}</a-option
+            >
+          </a-select>
+        </div>
+        <div class="filter-item">
           <div class="filter-item-label">状态</div>
           <a-select
             v-model="filter.state"
@@ -67,7 +83,7 @@
 
 <script setup lang="ts">
   import { reactive, ref, toRefs } from 'vue';
-  import { userState } from '@/constants';
+  import { userState, userRoleOptions } from '@/constants';
   import { list, setState } from '@/api/user-manage';
   import { debounce } from '@/utils/debounce';
   import { object2Options } from '@/utils/global';
@@ -79,6 +95,7 @@
       userName: '',
       nickName: '',
       state: '',
+      role: '',
     },
   });
   const { filter } = toRefs(option);
