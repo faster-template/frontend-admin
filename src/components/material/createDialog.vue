@@ -105,7 +105,7 @@
   });
   const handleSubmit = () => {
     if (form.file && (form.file as File).size > 0) {
-      const extData = { folder: 'material', oss: form.ossType };
+      const extData = { folder: 'material', oss: form.ossType, materialState: 'true' };
       uploadFile(form.file, extData).then((res) => {
         if (props.showSuccessMessage) {
           Message.success('添加素材成功');
