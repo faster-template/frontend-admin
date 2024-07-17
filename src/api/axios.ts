@@ -3,9 +3,7 @@ import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Message, Modal } from '@arco-design/web-vue';
 import { getCSRF } from '@/utils/csrf';
 import { getToken } from '@/utils/auth';
-
 import { getStorage, removeStorage, setStorage } from '@/utils/storage';
-
 import { md5 } from 'js-md5';
 
 export interface HttpResponse<T = unknown> {
@@ -23,60 +21,50 @@ export interface RequestConfig<T = any> extends AxiosRequestConfig<T> {
 
 const instance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '',
-  timeout: 30000,
+  timeout: 3000,
   headers: {},
 });
 
 /**
- *  使用config中的，url,method,data,params 等参数生成唯一的key
+ *  使用config中参数：url,method,params,data 生成唯一key
  * @param config AxiosRequestConfig
  * @returns string（MD5）
  */
+function obj2str(obj: object): string {
+  return (
+    obj &&
+    Object.keys(obj)
+      .filter((v) => {
+        return !!obj[v];
+      })
+      .sort((a, b) => a.localeCompare(b))
+      .reduce((acc: string[], val) => {
+        acc.push(`${val}:${obj[val]}`);
+        return acc;
+      }, [])
+      .join('#')
+  );
+}
 function generateFetchKey(config: AxiosRequestConfig): string {
   const keys = { url: config.url, method: config.method, params: config.params, data: config.data };
-  keys.params =
-    keys.params &&
-    Object.keys(keys.params)
-      .sort((a, b) => a.localeCompare(b))
-      .reduce((acc: string[], val) => {
-        acc.push(`p_${val}:${keys.params[val]}`);
-        return acc;
-      }, [])
-      .join('#');
-  keys.data =
-    keys.data &&
-    Object.keys(keys.data)
-      .sort((a, b) => a.localeCompare(b))
-      .reduce((acc: string[], val) => {
-        acc.push(`d_${val}:${keys.data[val]}`);
-        return acc;
-      }, [])
-      .join('#');
-  return md5(
-    Object.keys(keys)
-      .filter((v) => {
-        return !!keys[v];
-      })
-      .reduce((acc: string[], val) => {
-        acc.push(`${val}:${keys[val]}`);
-        return acc;
-      }, [])
-      .join('+')
-  );
+  keys.params = obj2str(keys.params);
+  keys.data = obj2str(keys.data);
+  return md5(obj2str(keys));
 }
 // #region 缓存设置
 // ######################## 缓存设置 START ########################
 const CACHE_KEY = 'fetch-cache';
-const CACHE_MESSAGE = 'from-cache';
-const buildKey = (fetchKey: any) => {
+const CACHE_MESSAGE = 'custom-cache';
+const CACHE_DEFAULT_TIME = 500;
+const buildCacheKey = (fetchKey: any) => {
   return `${CACHE_KEY}-${fetchKey}`;
 };
 
 const getCacheData = (fetchKey: string): null | any => {
-  return getStorage<Record<string, any>>(buildKey(fetchKey), sessionStorage);
+  return getStorage<Record<string, any>>(buildCacheKey(fetchKey), sessionStorage);
 };
 const setCacheData = (fetchKey: string, data: any, expired: number) => {
-  fetchKey = buildKey(fetchKey);
+  fetchKey = buildCacheKey(fetchKey);
   setStorage(fetchKey, data, sessionStorage);
   setTimeout(() => {
     removeStorage(fetchKey, sessionStorage);
@@ -88,6 +76,9 @@ const setCacheData = (fetchKey: string, data: any, expired: number) => {
 // #region 连续请求设置
 // ######################## 连续请求设置 START ########################
 // 用于记录当前请求的取消函数
+
+const INTERVAL_MESSAGE = 'custom-interval';
+const INTERVAL_DEFAULT_TIME = 500;
 const fetchQuery: Set<string> = new Set();
 function addFetchQuery(fetchKey: string, interval: number) {
   fetchQuery.add(fetchKey);
@@ -102,21 +93,17 @@ function addFetchQuery(fetchKey: string, interval: number) {
 
 instance.interceptors.request.use(
   (config: RequestConfig) => {
-    const controller = new AbortController();
-    config.signal = controller.signal;
     const fetchKey = generateFetchKey(config);
-    // 如果需要进行简短
+    // 判断是否需限制请求频率
     if (config.interval !== false) {
       if (fetchQuery.has(fetchKey)) {
-        setTimeout(() => {
-          controller.abort();
-        }, 0);
-      } else {
-        addFetchQuery(fetchKey, config.interval || 5000);
+        const cancelRejectData = { message: INTERVAL_MESSAGE };
+        return Promise.reject(cancelRejectData);
       }
+      addFetchQuery(fetchKey, config.interval || INTERVAL_DEFAULT_TIME);
     }
 
-    // 尝试从缓存获取数据
+    // 判断是否使用缓存
     if (config.method === 'get' && config.cache !== false) {
       const cacheData = getCacheData(fetchKey);
       if (cacheData) {
@@ -126,9 +113,7 @@ instance.interceptors.request.use(
     }
     const token = getToken();
     if (token) {
-      if (!config.headers) {
-        config.headers = {};
-      }
+      config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
       config.headers['x-csrf-token'] = getCSRF() as string;
     }
@@ -161,7 +146,7 @@ instance.interceptors.response.use(
     }
     const config = response.config as RequestConfig;
     if (config.method === 'get' && config.cache !== false) {
-      setCacheData(generateFetchKey(config), res, config.cache || 500);
+      setCacheData(generateFetchKey(config), res, config.cache || CACHE_DEFAULT_TIME);
     }
     return res;
   },
@@ -169,7 +154,7 @@ instance.interceptors.response.use(
     if (error.message === CACHE_MESSAGE) {
       return Promise.resolve(error.data);
     }
-    if (error.message !== 'canceled') {
+    if (error.message !== INTERVAL_MESSAGE) {
       Message.error({
         content: error.msg || '客户端异常，请刷新重试',
         duration: 5 * 1000,
