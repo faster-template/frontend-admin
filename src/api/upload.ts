@@ -1,10 +1,7 @@
+import { UploadOption } from '@/types/upload';
 import axios from './axios';
 
-export const uploadFile = (
-  file: File,
-  data: Record<string, string | Blob>,
-  action = '/upload/file'
-) => {
+export const uploadFile = (file: File, data: UploadOption, action = '/upload/file') => {
   const formData = new FormData();
   formData.append('file', file);
   if (data) {

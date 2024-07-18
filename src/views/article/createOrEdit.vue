@@ -8,7 +8,7 @@
               <a-input
                 v-model="form.title"
                 placeholder="请输入标题"
-                max-length="30"
+                :max-length="30"
                 allow-clear
                 show-word-limit
               />
@@ -38,8 +38,8 @@
             </a-form-item>
           </a-col>
         </a-row>
-        <a-form-item field="content" label="内容">
-          <editor v-model:content="form.content"></editor>
+        <a-form-item field="content" label="内容" class="form-content">
+          <editor v-model:content="form.content" v-model:mode="form.contentMode"></editor>
         </a-form-item> </a-form
     ></a-spin>
   </div>
@@ -65,6 +65,7 @@
     id: null,
     title: '',
     categoryId: '',
+    contentMode: 'richtext', // markdown , richtext
     content: '',
   });
   const rules = {
@@ -106,6 +107,7 @@
             form.title = data.title;
             form.categoryId = data.category.id;
             form.content = data.content;
+            form.contentMode = data.contentMode || 'richtext';
           } else {
             Message.error('文章不存在');
             router.replace('/article/list');
@@ -165,6 +167,7 @@
   const draftSelected = (draft) => {
     form.content = draft.content;
     form.title = draft.title;
+    form.contentMode = draft.contentMode;
   };
 </script>
 
@@ -176,6 +179,11 @@
 
     :deep(.form-btn) {
       justify-content: flex-end;
+    }
+
+    .form-content {
+      display: block;
+      width: 100%;
     }
   }
 </style>

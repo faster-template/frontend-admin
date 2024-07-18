@@ -16,7 +16,14 @@
             <span class="auther-info-name">{{ article.creator['nickName'] }}</span>
             <span class="auther-info-updatetime">{{ article.updateTime }}</span>
           </div>
-          <div class="content" v-html="article.content"> </div>
+          <div class="content">
+            <markdownViewer
+              v-if="article.contentMode == 'markdown'"
+              :content="article.content"
+            ></markdownViewer>
+            <richtextViewer v-else :content="article.content"></richtextViewer>
+          </div>
+
           <like :relation-id="props.id" relation-type="article"></like>
           <comment :relation-id="props.id" relation-type="article"></comment> </div
       ></a-spin> </a-modal
@@ -28,9 +35,10 @@
   import { getDetail } from '@/api/article';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
-  import DOMPurify from 'dompurify';
   import comment from '@/components/comment/index.vue';
   import like from '@/components/like/index.vue';
+  import markdownViewer from '@/components/editor/markdown-viewer.vue';
+  import richtextViewer from '@/components/editor/richtext-viewer.vue';
 
   const props = defineProps({
     id: { type: String, default: null },
@@ -45,6 +53,7 @@
   const article = ref({
     title: '',
     content: '',
+    contentMode: '',
     creator: {},
     comments: [],
     updateTime: '',
@@ -56,7 +65,7 @@
       .then(({ data }) => {
         if (data) {
           article.value = data;
-          article.value.content = DOMPurify.sanitize(data.content);
+          // article.value.content = DOMPurify.sanitize(data.content);
         } else {
           Message.error('文章不存在');
           visible.value = false;

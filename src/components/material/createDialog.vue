@@ -44,15 +44,16 @@
 <script setup lang="ts">
   import { ref, reactive, computed } from 'vue';
   import {
-    ossTypeOption,
     acceptImages,
     acceptAudios,
     acceptDocs,
     acceptVideos,
     acceptTypes,
-  } from '@/constants/material';
+  } from '@/constants/file';
+  import { ossTypeOption } from '@/constants/material';
   import { uploadFile } from '@/api/upload';
   import { Message } from '@arco-design/web-vue';
+  import { OssOption, UploadOption } from '@/types/upload';
 
   const visible = defineModel('visible', {
     type: Boolean,
@@ -105,7 +106,11 @@
   });
   const handleSubmit = () => {
     if (form.file && (form.file as File).size > 0) {
-      const extData = { folder: 'material', oss: form.ossType, materialState: 'true' };
+      const extData: UploadOption = {
+        folder: 'material',
+        oss: form.ossType as OssOption,
+        materialState: 1,
+      };
       uploadFile(form.file, extData).then((res) => {
         if (props.showSuccessMessage) {
           Message.success('添加素材成功');

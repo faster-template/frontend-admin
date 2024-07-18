@@ -42,9 +42,7 @@
 
 <script setup lang="ts">
   import { ref } from 'vue';
-
   import { FileItem, Message } from '@arco-design/web-vue';
-
   import { getToken } from '@/utils/auth';
 
   const url = defineModel('url', { type: String, default: '' });

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { App, Plugin } from 'vue';
 import { Router } from 'vue-router';
 
@@ -13,12 +14,14 @@ function sendErrorInfo(errorType: string, error: string) {
 const ErrorHandler: Plugin = {
   install(app: App, { router }: ErrorHandlerOptions = {}) {
     const handlePromiseRejection = (event: PromiseRejectionEvent) => {
+      console.log(event);
       sendErrorInfo('promise-error', event.reason);
       event.stopImmediatePropagation();
       event.preventDefault();
     };
 
     const handleErrorEvent = (event: ErrorEvent) => {
+      console.log(event);
       sendErrorInfo('event-error', event.message);
       event.stopImmediatePropagation();
       event.preventDefault();
@@ -42,6 +45,7 @@ const ErrorHandler: Plugin = {
     window.onerror = handleWindowError;
 
     app.config.errorHandler = (_err, _instance, info) => {
+      console.log(_err, _instance);
       sendErrorInfo('vue', info);
     };
 
