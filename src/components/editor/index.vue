@@ -16,13 +16,13 @@
       ref="markdownRef"
       v-model:content="content"
       :is-html="isHtml"
-      @before-unmount="onMdBeforeUnmount"
     ></markdown>
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref } from 'vue';
+  import VditorPreview from 'vditor/dist/method.min';
   import richtext from './richtext.vue';
   import markdown from './markdown.vue';
 
@@ -42,10 +42,13 @@
   const markdownRef = ref();
   const isHtml = ref(false);
   const onModeChange = (val) => {
-    isHtml.value = val === 'markdown';
-  };
-  const onMdBeforeUnmount = ({ html }) => {
-    content.value = html;
+    if (val === 'richtext') {
+      VditorPreview.md2html(content.value, {}).then((res) => {
+        content.value = res;
+      });
+    } else {
+      isHtml.value = true;
+    }
   };
 </script>
 

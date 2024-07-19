@@ -12,8 +12,3 @@
     },
   });
 </script>
-
-<style lang="less" scoped>
-  .editor-comp-rt-v-container {
-  }
-</style>

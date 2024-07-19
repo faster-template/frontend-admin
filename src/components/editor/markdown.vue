@@ -23,7 +23,7 @@
       default: false,
     },
   });
-  const emits = defineEmits(['created', 'beforeUnmount']);
+  const emits = defineEmits(['created']);
   onMounted(() => {
     vditor.value = new Vditor('vditor', {
       height: 500,
@@ -73,6 +73,11 @@
       },
       upload: {
         url: '/api/upload/file',
+        linkToImgUrl: 'test',
+        linkToImgCallback(url) {
+          console.log(url);
+          return '123';
+        },
         async handler(files: File[]) {
           const file = files[0];
           const fileType = getFileTypeByMimeType(file.type);
@@ -91,6 +96,7 @@
       after: () => {
         const val = props.isHtml ? vditor.value.html2md(content.value) : content.value;
         vditor.value.setValue(val);
+        content.value = val;
         emits('created', vditor.value);
       },
       input: debounce(
@@ -111,7 +117,6 @@
     }
   );
   onBeforeUnmount(() => {
-    emits('beforeUnmount', { html: vditor.value.getHTML() });
     vditor.value.destroy();
   });
 

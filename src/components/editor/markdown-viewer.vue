@@ -1,11 +1,17 @@
 <template>
-  <div ref="viewRef" class="editor-comp-md-v-container"></div>
+  <div ref="viewRef" class="editor-comp-md-v-container">
+    <a-skeleton animation>
+      <a-space direction="vertical" :style="{ width: '100%' }" size="large">
+        <a-skeleton-line :rows="3" />
+        <a-skeleton-shape />
+      </a-space>
+    </a-skeleton>
+  </div>
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
-  import * as marked from 'marked';
-  import DOMPurify from 'dompurify';
+  import VditorPreview from 'vditor/dist/method.min';
+  import { onMounted, ref } from 'vue';
 
   const props = defineProps({
     content: {
@@ -14,11 +20,6 @@
   });
   const viewRef = ref();
   onMounted(() => {
-    viewRef.value.innerHTML = DOMPurify.sanitize(marked.parse(props.content as string));
+    VditorPreview.preview(viewRef.value, props.content, {});
   });
 </script>
-
-<style lang="less" scoped>
-  .editor-comp-md-v-container {
-  }
-</style>
