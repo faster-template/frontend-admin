@@ -48,7 +48,14 @@ function obj2str(obj: object): string {
 function generateFetchKey(config: AxiosRequestConfig): string {
   const keys = { url: config.url, method: config.method, params: config.params, data: config.data };
   keys.params = obj2str(keys.params);
+  if (config.headers && config.headers['Content-Type'] === 'multipart/form-data') {
+    keys.data = Array.from((config.data as FormData).entries()).reduce((acc, [k, v]) => {
+      acc[k] = v instanceof File ? `n:${v.name},s:${v.size}` : v;
+      return acc;
+    }, {});
+  }
   keys.data = obj2str(keys.data);
+
   return md5(obj2str(keys));
 }
 // #region 缓存设置

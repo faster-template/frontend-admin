@@ -38,6 +38,16 @@
             </a-form-item>
           </a-col>
         </a-row>
+        <a-form-item field="cover" label="封面">
+          <uploadImage
+            v-model:url="form.cover"
+            :default-url="form.cover"
+            :data="{ folder: 'content' }"
+            text="上传"
+            width="180px"
+            height="80px"
+          ></uploadImage>
+        </a-form-item>
         <a-form-item field="content" label="内容" class="form-content">
           <editor v-model:content="form.content" v-model:mode="form.contentMode"></editor>
         </a-form-item> </a-form
@@ -56,6 +66,7 @@
   import editor from '@/components/editor/index.vue';
   import { saveAsDraft, save, getDetail } from '@/api/article';
   import useLoading from '@/hooks/loading';
+  import uploadImage from '@/components/upload/uploadImage.vue';
 
   const router = useRouter();
   const route = useRoute();
@@ -64,6 +75,7 @@
   const form = reactive({
     id: null,
     title: '',
+    cover: '',
     categoryId: '',
     contentMode: 'richtext', // markdown , richtext
     content: '',
@@ -107,6 +119,7 @@
             form.title = data.title;
             form.categoryId = data.category.id;
             form.content = data.content;
+            form.cover = data.cover;
             form.contentMode = data.contentMode || 'richtext';
           } else {
             Message.error('文章不存在');
@@ -168,6 +181,7 @@
     form.content = draft.content;
     form.title = draft.title;
     form.contentMode = draft.contentMode;
+    form.cover = draft.cover;
   };
 </script>
 

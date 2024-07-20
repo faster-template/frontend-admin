@@ -19,4 +19,6 @@ export interface UploadOption {
   noRandomFileName?: boolean; // 是否随机文件名称,在fileName不存在时生效
   folder?: FolderOption; // 文件夹路径
   materialState?: 1 | -2;
+  width?: number;
+  height?: number;
 }

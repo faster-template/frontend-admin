@@ -1,5 +1,11 @@
 <template>
-  <div id="vditor" class="markdown-editor-comp-container"> </div>
+  <div id="vditor" class="markdown-editor-comp-container">
+    <a-skeleton animation>
+      <a-space direction="vertical" :style="{ width: '100%' }" size="large">
+        <a-skeleton-line :rows="10" />
+      </a-space>
+    </a-skeleton>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -73,11 +79,6 @@
       },
       upload: {
         url: '/api/upload/file',
-        linkToImgUrl: 'test',
-        linkToImgCallback(url) {
-          console.log(url);
-          return '123';
-        },
         async handler(files: File[]) {
           const file = files[0];
           const fileType = getFileTypeByMimeType(file.type);

@@ -1,83 +1,125 @@
 <template>
-  <div class="upload-image-comp-container">
-    <a-upload
-      :action="props.action"
-      :file-list="uploadFile ? [uploadFile] : []"
-      :show-file-list="false"
-      accept=".jpg,.png"
-      with-credentials
-      :headers="headers"
-      :data="props.data"
-      @success="onSuccess"
-      @error="onError"
-    >
-      <template #upload-button>
-        <div
-          :class="`arco-upload-list-item${
-            uploadFile && uploadFile.status === 'error' ? ' arco-upload-list-item-error' : ''
-          }`"
-        >
-          <div
-            v-if="uploadFile && uploadFile.url"
-            class="arco-upload-list-picture custom-upload-avatar"
-          >
-            <img :src="uploadFile.url" />
-            <div class="arco-upload-list-picture-mask">
-              <IconEdit />
-            </div>
-          </div>
-          <div v-else class="arco-upload-picture-card">
-            <div class="arco-upload-picture-card-text">
-              <IconPlus />
-              <div style="margin-top: 10px; font-weight: 600">{{ props.text || '上传' }}</div>
-            </div>
-          </div>
-        </div>
-      </template>
-    </a-upload>
-    <a-button v-if="url" type="text" @click="onPreview">预览</a-button>
-    <a-image-preview v-model:visible="visible" :src="url" />
-  </div>
+  <a-upload
+    v-model:file-list="files"
+    class="upload-image-comp-container"
+    list-type="picture-card"
+    :action="props.action"
+    :limit="props.limit"
+    image-preview
+    :custom-request="customRequst"
+    multiple
+    @change="onChange"
+    @exceed-limit="onExceedLimit"
+  >
+    <template #upload-button>
+      <div class="arco-upload-picture-card">
+        {{ props.text }}
+      </div>
+    </template>
+  </a-upload>
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import { FileItem, Message } from '@arco-design/web-vue';
-  import { getToken } from '@/utils/auth';
+  import { PropType, ref, watch } from 'vue';
+  import { FileItem, Message, RequestOption } from '@arco-design/web-vue';
+  import { uploadFileCanAbort } from '@/api/upload';
+  import { UploadOption } from '@/types/upload';
 
-  const url = defineModel('url', { type: String, default: '' });
+  const url = defineModel('url', {
+    type: [String, Array] as unknown as () => string | string[],
+    default: '',
+  });
   const emits = defineEmits(['success']);
   const props = defineProps({
     data: {
-      type: Object,
+      type: Object as PropType<UploadOption>,
       default: () => ({}),
     },
-    text: {
-      type: String,
-      default: '上传',
+    defaultUrl: {
+      type: [String, Array] as unknown as () => string | string[],
+      default: '',
     },
-    action: { type: String, default: '/api/upload/file' },
+    action: { type: String, default: '/upload/file' },
+    text: { type: String, default: '上传' },
+    limit: {
+      type: Number,
+      default: 1,
+    },
+    width: {
+      type: String,
+      default: '80px',
+    },
+    height: {
+      type: String,
+      default: '80px',
+    },
   });
-  const uploadFile = ref({ url: url.value } as FileItem);
-  const headers = { Authorization: `Bearer ${getToken()}` };
+  const files = ref([] as FileItem[]);
 
-  const onSuccess = (fileItem) => {
-    if (fileItem.response && fileItem.response.success) {
-      const fileUrl = fileItem.response.data;
-      Message.success('上传成功');
-      url.value = fileUrl;
-      uploadFile.value.url = fileUrl;
-      emits('success', fileUrl);
-    } else {
-      Message.error('上传失败，请重新上传');
+  const initFiles = () => {
+    files.value = [];
+    if (props.defaultUrl) {
+      if (Array.isArray(props.defaultUrl)) {
+        props.defaultUrl.forEach((u) => {
+          files.value.push({ url: u, status: 'done' } as FileItem);
+        });
+      } else {
+        files.value.push({ url: props.defaultUrl, status: 'done' } as FileItem);
+      }
     }
   };
-  const onError = () => {
-    Message.error('上传失败，请重新上传');
+  watch(() => props.defaultUrl, initFiles);
+  const onExceedLimit = () => {
+    Message.error(`选择照片数量超过出现，仅允许上传${props.limit}张`);
   };
 
-  const visible = ref(false);
-  const onPreview = () => {
-    visible.value = !visible.value;
+  const onChange = () => {
+    const doneFileUrl = files.value.filter((t) => t.status === 'done').map((t) => t.url);
+    if (props.limit === 1) {
+      url.value = doneFileUrl[0] || '';
+    } else {
+      url.value = (doneFileUrl as string[]) || [];
+    }
+  };
+  const customRequst = (option: RequestOption) => {
+    const { fileItem } = option;
+    const { controller, request } = uploadFileCanAbort(
+      fileItem.file as File,
+      props.data,
+      props.action
+    );
+    request
+      .then(({ data }) => {
+        Message.success('上传成功');
+        fileItem.url = data;
+        fileItem.status = 'done';
+        emits('success', data);
+        onChange(); // 因为Arco的bug，导致在状态改变并不会触发onChange,这里手动触发
+      })
+      .catch(() => {
+        Message.error('上传失败，请重新上传');
+        fileItem.status = 'error';
+      });
+
+    return {
+      abort() {
+        controller.abort();
+      },
+    };
   };
 </script>
+
+<style lang="less" scoped>
+  .upload-image-comp-container {
+    :deep(.arco-upload-list-picture),
+    :deep(.arco-upload-picture-card) {
+      position: relative;
+      width: v-bind('props.width');
+      min-width: 10px;
+      height: v-bind('props.height');
+      overflow: hidden;
+      border: 1px solid #ededed;
+      border-radius: 6px;
+    }
+  }
+</style>

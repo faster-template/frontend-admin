@@ -18,8 +18,18 @@
         <a-form-item field="key" label="标识">
           <a-input v-model="form.key" placeholder="唯一标识，全大写，2~20字" />
         </a-form-item>
+        <a-form-item field="icon" label="Icon">
+          <uploadImage
+            v-model:url="form.icon"
+            :default-url="form.icon"
+            :data="{ folder: 'icon', oss: 'qiniu' }"
+          ></uploadImage>
+        </a-form-item>
+        <a-form-item field="url" label="链接">
+          <a-input v-model="form.url" placeholder="此处允许录入链接便于前端操作" />
+        </a-form-item>
         <a-form-item field="description" label="描述">
-          <a-input v-model="form.description" placeholder="请输入描述" />
+          <a-textarea v-model="form.description" placeholder="请输入描述" />
         </a-form-item>
         <!-- <a-form-item field="sort" label="排序序号">
           <a-input-number v-model="form.sort" placeholder="请输入排序序号" :min="1" :max="100" />
@@ -32,6 +42,7 @@
 <script setup lang="ts">
   import { computed, reactive, ref, watch } from 'vue';
   import { create, update } from '@/api/category';
+  import uploadImage from '@/components/upload/uploadImage.vue';
   import { ICategory } from '../types';
 
   // ref
@@ -53,6 +64,8 @@
   const form = reactive({
     name: '',
     key: '',
+    icon: '',
+    url: '',
     description: '',
     parentId: '' as null | string,
     id: '' as null | string,
@@ -133,6 +146,8 @@
         form.description = categoryModel.value.description;
         form.sort = categoryModel.value.sort;
         form.parentId = categoryModel.value.parentId;
+        form.url = categoryModel.value.url;
+        form.icon = categoryModel.value.icon;
         form.id = categoryModel.value.id;
       }
     }

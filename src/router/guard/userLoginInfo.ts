@@ -3,6 +3,7 @@ import * as NProgress from 'nprogress'; // progress bar
 
 import { useUserStore } from '@/store';
 import { isLogin } from '@/utils/auth';
+import { Message } from '@arco-design/web-vue';
 
 export default function setupUserLoginInfoGuard(router: Router) {
   router.beforeEach(async (to, _from, next) => {
@@ -13,6 +14,7 @@ export default function setupUserLoginInfoGuard(router: Router) {
         await userStore.info();
         next();
       } catch (error) {
+        Message.error('获取用户信息失败，请刷新重试');
         await userStore.logout();
         next({
           name: 'login',
